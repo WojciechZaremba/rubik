@@ -1,6 +1,6 @@
 console.log("test")
 
-let cubeState = "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg"
+let cubeState = "roooooooorwwwwwwwwyrrrrrrrrryyyyyyyyrbbbbbbbbrgggggggg"
 
 // faces are collected left to right top to bottom
 const faceWest = [0,1,2,3,4,5,6,7,8]
@@ -10,64 +10,76 @@ const faceNorth = faceWest.map(a => a + 9 * 3)
 const faceTop = faceWest.map(a => a + 9 * 4)
 const faceBottom = faceWest.map(a => a + 9 * 5)
 
-const faces = [faceWest, faceSouth, faceEast, faceNorth, faceTop, faceBottom]
+
+const faceClock = [6,3,0,7,4,1,8,5,2]
+const faceCounter = [2,5,8,1,4,7,0,3,6]
 
 // rings are collected clockwise
 const ringWest = [  
-    ...getLeft(faceTop),
-                ...getLeft(faceSouth),
-                ...getLeft(faceBottom),
-                ...getRight(faceNorth)
-                ]
+...getRight(faceNorth),
+...getLeft(faceTop),
+...getLeft(faceSouth),
+...getLeft(faceBottom),
+]
 const ringSouth = [  
-    ...getRight(faceWest),
-                ...getBottom(faceTop),
-                ...getLeft(faceEast),
-                ...getTop(faceBottom),
-                ]
+...getRight(faceWest),
+...getDown(faceTop),
+...getLeft(faceEast),
+...getUp(faceBottom),
+]
 const ringEast = [  
-                ...getLeft(faceTop),
-                ...getLeft(faceSouth),
-                ...getLeft(faceBottom),
-                ...getRight(faceNorth)
-                ]
+...getRight(faceSouth),
+...getRight(faceTop),
+...getLeft(faceNorth),
+...getRight(faceBottom)
+]
 const ringNorth = [  
-    ...getLeft(faceTop),
-                ...getLeft(faceSouth),
-                ...getLeft(faceBottom),
-                ...getRight(faceNorth)
-            ]
+...getRight(faceEast),
+...getUp(faceTop),
+...getLeft(faceWest),
+...getDown(faceBottom)
+]
 const ringTop = [  
-                ...getLeft(faceTop),
-                ...getLeft(faceSouth),
-                ...getLeft(faceBottom),
-                ...getRight(faceNorth)
-                ]
+...getUp(faceWest),
+...getUp(faceNorth),
+...getUp(faceEast),
+...getUp(faceSouth)
+]
 const ringBottom = [  
-                ...getLeft(faceTop),
-                ...getLeft(faceSouth),
-                ...getLeft(faceBottom),
-                ...getRight(faceNorth)
-            ]
-            
-const rings = [ringWest, ringSouth, ringEast, ringNorth, ringTop, ringBottom]
+...getDown(faceWest),
+...getDown(faceSouth),
+...getDown(faceEast),
+...getDown(faceNorth)
+]
+
+// facesDefault and ringsDefaut order must always be identical
+const facesDefault = [faceWest, faceSouth, faceEast, faceNorth, faceTop, faceBottom]
+const ringsDefault = [ringWest, ringSouth, ringEast, ringNorth, ringTop, ringBottom]
+const ringsRotatedClockwise = []
+ringsDefault.forEach(ring => {
+    ringsRotatedClockwise
+        .push(ring
+            .slice(ring.length - 3)
+            .concat(ring.slice(0, ring.length - 3))
+        )
+})
                 
 function getLeft(face) { 
-    return [face[0],face[3],face[6]]
+    return [face[0], face[3], face[6]]
 }
 function getRight(face) {
-    return [face[8],face[5],face[2]]
+    return [face[8], face[5], face[2]]
 }
-function getTop(face) {
-    return [face[2],face[1],face[0]]
+function getUp(face) {
+    return [face[2], face[1], face[0]]
 }
-function getBottom(face) {
-    return [face[6],face[7],face[8]]
+function getDown(face) {
+    return [face[6], face[7], face[8]]
 }
 
 function debug() {
-    const logs      = ["","",""]
-    const logStyles = [[],[],[]]
+    const logs      = ["", "", ""]
+    const logStyles = [[], [], []]
     
     for (let i = 36; i < 45; i += 3) {
         logs[0] += `\n        ${cubeState.substring(i, i + 3)}`
@@ -118,9 +130,78 @@ function debug() {
     }
 }
 
+function rotor(face) {
+    let faceIdx = facesDefault.indexOf(face)
+    let temp = cubeState.split("")
+    let diff = faceIdx * 9
+    console.log(diff)
+    for (let i = 0; i < faceClock.length; i++) {
+        temp[i + diff] = cubeState[faceClock[i] + diff]
+    }
+    for (let i = 0; i < ringsRotatedClockwise[0].length; i++) {
+        temp[ringsDefault[faceIdx][i]] = cubeState[ringsRotatedClockwise[faceIdx][i]]
+    }
+    cubeState = temp.join("")
+    debug()
+}
 
-const faceClock = [6,3,0,7,4,1,8,5,2]
-const faceCounter = [2,5,8,1,4,7,0,3,6]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

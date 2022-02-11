@@ -85,9 +85,11 @@ function getDown(face) {
 function debug(cubeState) {
     const logs      = ["", "", ""]
     const logStyles = [[], [], []]
+
+    let logsReady = ""
     
     for (let i = 36; i < 45; i += 3) {
-        logs[0] += `\n        ${cubeState.substring(i, i + 3)}`
+        logs[0] += `        ${cubeState.substring(i, i + 3)}\n`
     }
     for (let i = 0; i < 3; i++) {
         for (let j = i * 3; j < 36; j += 9) {
@@ -99,9 +101,7 @@ function debug(cubeState) {
         logs[2] += `\n        ${cubeState.substring(i, i + 3)}`
     }
 
-    logs[0] = logs[0].substring(1)
     logs[1] = logs[1].substring(0,logs[1].length - 1)
-    logs[2] = logs[2].substring(1)
 
     for (let l = 0; l < logs.length; l++) {
         let temp = logs[l].split("")
@@ -131,8 +131,9 @@ function debug(cubeState) {
             }
         }
         logs[l] = temp.join("")
-        console.log(logs[l], ...logStyles[l])
+        logsReady += logs[l]
     }
+    console.log(logsReady, ...logStyles.flat())
 }
 
 function rotor(faceName, currentState, direction) {
@@ -161,22 +162,35 @@ class Cube {
     constructor(stateStr = "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg") {
         this.state = stateStr
         this.history = []
+        this.historyIndex = 0
     }
-
     turn(command) {
         this.state = command.execute(this.state)
+        this.history.splice(this.historyIndex)
         this.history.push(command)
+        this.historyIndex++
+        // this.historyIndex = this.history.lenght
         this.log()
     }
-
     undo() {
-        const command = this.history.pop()
-        this.state = command.undo(this.state)
+        // const command = this.history.pop()
+        if (this.historyIndex > 0) {
+            this.historyIndex--
+            const command = this.history[this.historyIndex]
+            this.state = command.undo(this.state)
+        }
         this.log()
     }
-
+    redo() {
+        if (this.historyIndex < this.history.length) {
+            const command = this.history[this.historyIndex]
+            this.state = command.execute(this.state)
+            this.historyIndex++
+        }
+        this.log()
+    }
     log() {
-        console.log("")
+        //console.log(this.historyIndex)
         debug(this.state)
     }
 }
@@ -186,27 +200,44 @@ class Turn {
         this.faceToRotate = face
         this.direction = turnClockWise
     }
-
     execute(currentState) {
         return rotor(this.faceToRotate, currentState, this.direction)
     }
-
     undo(currentState) {
         return rotor(this.faceToRotate, currentState, !this.direction)
     }
 }
 
+function scramble() {
+    let cube = new Cube()
+    let turns = Math.floor(Math.random() * 25 + 9)
+    while (turns > 0) {
+        let faceIdx = Math.floor(Math.random() * 6)
+        //console.log(faceIdx)
+        cube.turn(new Turn(facesDefault[faceIdx], Math.random() < 0.5))
+        turns--
+    }
+    return cube
+}
 
-let cube = new Cube()
-cube.turn(new Turn(faceTop, false))
-cube.turn(new Turn(faceBottom, true))
-cube.turn(new Turn(faceBottom, true))
-cube.undo()
-cube.undo()
-cube.undo()
+let cube = scramble()
+
+// let cube = new Cube()
+// cube.turn(new Turn(faceTop, false))
+// cube.turn(new Turn(faceBottom, true))
+// cube.turn(new Turn(faceBottom, true))
+// cube.undo()
+// cube.undo()
+// cube.undo()
 
 
-
+window.addEventListener("keydown", (e)=>{
+    if (e.key === "ArrowLeft") {
+        cube.undo()
+    } else if (e.key === "ArrowUp") {
+        cube.redo()
+    }
+})
 
 
 

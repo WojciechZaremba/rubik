@@ -11,9 +11,6 @@ const faceTop = faceWest.map(a => a + 9 * 4)
 const faceBottom = faceWest.map(a => a + 9 * 5)
 
 
-const faceClock = [6,3,0,7,4,1,8,5,2]
-const faceCounter = [2,5,8,1,4,7,0,3,6]
-
 // rings are collected clockwise
 const ringWest = [  
 ...getRight(faceNorth),
@@ -56,14 +53,22 @@ const ringBottom = [
 const facesDefault = [faceWest, faceSouth, faceEast, faceNorth, faceTop, faceBottom]
 const ringsDefault = [ringWest, ringSouth, ringEast, ringNorth, ringTop, ringBottom]
 const ringsRotatedClockwise = []
+const ringsRotatedCounterClockwise = []
 ringsDefault.forEach(ring => {
     ringsRotatedClockwise
-        .push(ring
-            .slice(ring.length - 3)
-            .concat(ring.slice(0, ring.length - 3))
+    .push(ring
+        .slice(ring.length - 3)
+        .concat(ring.slice(0, ring.length - 3))
         )
-})
-                
+    ringsRotatedCounterClockwise
+    .push(ring
+        .slice(3, ring.length)
+        .concat(ring.slice(0, 3))
+        )
+    })
+const faceClock = [6,3,0,7,4,1,8,5,2]
+const faceCounter = [2,5,8,1,4,7,0,3,6]
+    
 function getLeft(face) { 
     return [face[0], face[3], face[6]]
 }
@@ -77,7 +82,7 @@ function getDown(face) {
     return [face[6], face[7], face[8]]
 }
 
-function debug() {
+function debug(cubeState) {
     const logs      = ["", "", ""]
     const logStyles = [[], [], []]
     
@@ -130,106 +135,79 @@ function debug() {
     }
 }
 
-function rotor(face) {
-    let faceIdx = facesDefault.indexOf(face)
-    let temp = cubeState.split("")
+function rotor(faceName, currentState, direction) {
+    let faceIdx = facesDefault.indexOf(faceName)
+    let temp = currentState.split("")
     let diff = faceIdx * 9
-    console.log(diff)
-    for (let i = 0; i < faceClock.length; i++) {
-        temp[i + diff] = cubeState[faceClock[i] + diff]
+    let properRotatedRings = ringsRotatedClockwise
+    let properRotatedFace = faceClock
+    if (direction === false) {
+        properRotatedRings = ringsRotatedCounterClockwise
+        properRotatedFace = faceCounter
     }
-    for (let i = 0; i < ringsRotatedClockwise[0].length; i++) {
-        temp[ringsDefault[faceIdx][i]] = cubeState[ringsRotatedClockwise[faceIdx][i]]
+
+    for (let i = 0; i < properRotatedFace.length; i++) {
+        temp[i + diff] = currentState[properRotatedFace[i] + diff]
     }
-    cubeState = temp.join("")
-    debug()
+    for (let i = 0; i < properRotatedRings[0].length; i++) {
+        temp[ringsDefault[faceIdx][i]] = currentState[properRotatedRings[faceIdx][i]]
+    }
+
+    return temp.join("")
 }
 
 
+class Cube {
+    constructor(stateStr = "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg") {
+        this.state = stateStr
+        this.history = []
+    }
 
+    turn(command) {
+        this.state = command.execute(this.state)
+        this.history.push(command)
+        this.log()
+    }
 
+    undo() {
+        const command = this.history.pop()
+        this.state = command.undo(this.state)
+        this.log()
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const moves = {
-    turnClockWise: [[...faceWest], [...faceClock]],
-    turnCounterClockWise: [[...faceWest], [...faceCounter]],
-    west: {
-        clock: [],
-        counter: []
-    },
-    south: {
-        clock: [],
-        counter: []
-    },
-    east: {
-        clock: [],
-        counter: []
-    },
-    north: {
-        clock: [],
-        counter: []
-    },
-    top: {
-        clock: [],
-        counter: []
-    },
-    bottom: {
-        clock: [],
-        counter: []
-    },
+    log() {
+        console.log("")
+        debug(this.state)
+    }
 }
+
+class Turn {
+    constructor(face, turnClockWise = true) {
+        this.faceToRotate = face
+        this.direction = turnClockWise
+    }
+
+    execute(currentState) {
+        return rotor(this.faceToRotate, currentState, this.direction)
+    }
+
+    undo(currentState) {
+        return rotor(this.faceToRotate, currentState, !this.direction)
+    }
+}
+
+
+let cube = new Cube()
+cube.turn(new Turn(faceTop, false))
+cube.turn(new Turn(faceBottom, true))
+cube.turn(new Turn(faceBottom, true))
+cube.undo()
+cube.undo()
+cube.undo()
+
+
+
+
+
+
+

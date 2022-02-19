@@ -1,6 +1,6 @@
 
-function rotor(faceName, currentState, direction, indexes) {
-    let faceIdx = indexes.facesDefault.indexOf(faceName)
+function rotor(faceToTurn, currentState, direction = true, indexes = indexes3x3) {
+    let faceIdx = indexes.facesDefault.indexOf(faceToTurn)
     let temp = currentState.split("")
     let diff = faceIdx * 9
     let properRotatedRings = indexes.ringsRotatedClockwise

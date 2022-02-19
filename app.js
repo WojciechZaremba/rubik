@@ -3,18 +3,8 @@ const cubeScrambled = new Cube()
 cubeScrambled.scramble()
 
 const solver = new SolutionFinder(cubeScrambled)
-solver.findAnyWall()
-solver.solutionPath
-
-
-
-
-
-
-
-
-
-
+// solver.findAnyWall()
+// solver.solutionPath
 
 
 
@@ -30,6 +20,3 @@ window.addEventListener("keydown", (e)=>{
         cubeScrambled.redo()
     }
 })
-
-
-

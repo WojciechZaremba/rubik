@@ -67,9 +67,9 @@ ringsDefault.forEach(ring => {
     const faceCounter = [2,5,8,1,4,7,0,3,6]
     
 
-    function getLeft(face) { 
-        return [face[0], face[3], face[6]]
-    }
+function getLeft(face) { 
+    return [face[0], face[3], face[6]]
+}
 function getRight(face) {
     return [face[8], face[5], face[2]]
 }

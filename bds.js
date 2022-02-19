@@ -1,8 +1,10 @@
 //////////////////////////// for testing purposes ////////////////////////////
+function bdsTest() {
+    const t0 = performance.now()
     const root = {
         id: 0,
         depth: 0,
-        str: "abcdef",
+        str: "abcdefgh",
         parent: null,
         children: []
     }
@@ -22,25 +24,28 @@
                     parent: node,
                     children: []
                 }
-                if (child.str[i] != "f") {
-                    child.str[i] = "f"
+                if (child.str[i] != "x") {
+                    child.str[i] = "x"
                     node.children.push(child)
                     queue.push(child)
-                    if (child.str.join("") === "ffffff")  {
+                    if (child.str.join("") === "xxxxxxxx")  {
                         keepSearching = false
+                        console.log(performance.now() - t0)
                         console.log(child)
-                        break
+                        return
                     } else if ( child.depth === 10) {
                         keepSearching = false
                         child.depth = "max"
+                        console.log(performance.now() - t0)
                         console.log(child)
-                        break
+                        return
                     }
                 }
             } 
         }
         queue.shift()
     }
+}
 
 
 

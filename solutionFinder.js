@@ -1,7 +1,3 @@
-function findSolution(cube, callback, c) {
-    console.log(cube)
-    callback(c)
-}
 
 class SolutionFinder {
     constructor(cubeToSolve) {
@@ -10,18 +6,30 @@ class SolutionFinder {
         this.solution = {}
         this.solutionPath = []
         this.patterns = {
-            orange: "ooooooooow..w..w.............y..y..yb..b..b..g..g..g..",
-            white:  "..o..o..owwwwwwwwwr..r..r.................bbbggg......",
-            red:    "...........w..w..wrrrrrrrrry..y..y....b..b..b..g..g..g",
-            yellow: "o..o..o.............r..r..ryyyyyyyyybbb............ggg",
-            blue:   "ooo......www......rrr......yyy......bbbbbbbbb.........",
-            green:  "......ooo......www......rrr......yyy.........ggggggggg",
-            whiteCross: ".....o....w.www.w....r.....................b..g......."
+            faces: {
+                orange: "ooooooooow..w..w.............y..y..yb..b..b..g..g..g..",
+                white:  "..o..o..owwwwwwwwwr..r..r.................bbbggg......",
+                red:    "...........w..w..wrrrrrrrrry..y..y....b..b..b..g..g..g",
+                yellow: "o..o..o.............r..r..ryyyyyyyyybbb............ggg",
+                blue:   "ooo......www......rrr......yyy......bbbbbbbbb.........",
+                green:  "......ooo......www......rrr......yyy.........ggggggggg",
+            },
+            crosses: {
+                orangeCross: ".o.ooo.o....w...................y......b........g.....",
+                whiteCross:  ".....o....w.www.w....r.....................b..g.......",
+                redCross:    "..............w....r.rrr.r....y..........b........g...",
+                yellowCross: "...o...................r....y.yyy.y..b..............g.",
+                blueCross:   ".o........w........r........y........b.bbb.b..........",
+                greenCross:  ".......o........w........r........y...........g.ggg.g."
+            },
         }
     }
     debugPatterns() {
-        Object.keys(solver.patterns).forEach(color => {
-            let cube = new Cube(this.patterns[color])
+        // let cube = new Cube(this.patterns.crosses.yellowCross)
+        // cube.log()
+        Object.keys(solver.patterns.crosses).forEach(color => {
+            let cube = new Cube(this.patterns.crosses[color])
+            console.log(color)
             console.log(color + ":")
             cube.log()
         })
@@ -45,37 +53,44 @@ class SolutionFinder {
                 direction: null
             },
             parent: {
-                state: ""
+                depth: -1,
+                state: undefined
             },
             children: []
         }
         
         const faces = indexes3x3.facesDefault
         
-        const nodeHistory = []
+        const nodeHistory = [root.state]
+        const allNodesArr = [root]
 
         const queue = [root]
         let keepSearching = true
         let nodeId = 0
         
         const boundSolutionHandler = handleSolutionNode.bind(this)
+        const boundCheckIfSolved = checkIfSolved.bind(this)
+
+        let pattern = this.patterns.crosses.greenCross
+        let crossesArr = []
+        for (const cross in this.patterns.crosses) crossesArr.push(this.patterns.crosses[cross])
 
         while (queue.length > 0 && keepSearching) {
             
             const parentNode = queue[0]
-            if (parentNode.depth >= 4 || queue.length > 300000) {
-            //if (parentNode.depth >= 5) {
+            if (parentNode.depth >= 6 || queue.length > 1000000) {
                 keepSearching = false
                 console.log((performance.now() - t0) / 1000 + " sec")
                 break
             } 
 
-            if (checkIfSolved(queue[0].state, this.patterns.white)) {
-                this.solution = queue[0]
-                console.log("a solution has been found")
-                keepSearching = false
-                break
-            }
+            // if (checkIfSolved(queue[0].state, pattern)) {
+            //     this.solution = queue[0]
+            //     console.log("a solution has been found")
+            //     this.solution = queue[0]
+            //     keepSearching = false
+            //     break
+            // }
 
             for (let i = 0; i < faces.length; i++) {
                 let face = faces[i]
@@ -107,18 +122,78 @@ class SolutionFinder {
                     parent: parentNode,
                     children: []
                 }
-                //console.log(parentNode.depth)
 
-                ////// OPTIMALIZATION 2: DON'T REPEAT ANY ANCESTORS IN STRAIGHT LINE
+                ///////////////////////////////////////////////////////////////////////////
+                ////// OPTIMALIZATION 3: DON'T REPEAT ANY NODE ////////////////////////////
+                ////// note: very slow; takes about 15 sec to reach and complete level 5 deep
+                ////// and about 0.5 sec to lvl 4
 
-                // let checkDepth = parentNode.depth
-                // while (checkDepth >= 0) {
-                //     if (foundRight && foundLeft) break
-                //     checkDepth--
+                // if (nodeHistory.indexOf(nodeLeft.state) === -1) {
+                //     nodeLeft.id = ++nodeId
+                //     parentNode.children.push(nodeLeft)
+                //     queue.push(nodeLeft)
+                //     nodeHistory.push(nodeLeft.state)
+                //     allNodesArr.push(nodeLeft)
                 // }
-                
-                let foundRight = checkAbove(nodeRight.parent.parent, nodeRight)
-                let foundLeft = checkAbove(nodeLeft.parent.parent, nodeLeft)
+                // if (nodeHistory.indexOf(nodeRight.state) === -1) {
+                //     nodeRight.id = ++nodeId
+                //     parentNode.children.push(nodeRight)
+                //     queue.push(nodeRight)
+                //     nodeHistory.push(nodeRight.state)
+                //     allNodesArr.push(nodeRight)
+                // }
+
+                //// testing combination of two different optimalizations
+                // if (parentNode.depth < 1) {
+                //     //
+                //     if (nodeHistory.indexOf(nodeLeft.state) === -1) {
+                //         nodeLeft.id = ++nodeId
+                //         parentNode.children.push(nodeLeft)
+                //         queue.push(nodeLeft)
+                //         nodeHistory.push(nodeLeft.state)
+                //         allNodesArr.push(nodeLeft)
+                //     }
+                //     if (nodeHistory.indexOf(nodeRight.state) === -1) {
+                //         nodeRight.id = ++nodeId
+                //         parentNode.children.push(nodeRight)
+                //         queue.push(nodeRight)
+                //         nodeHistory.push(nodeRight.state)
+                //         allNodesArr.push(nodeRight)
+                //     }
+                //     //
+                // } else if (parentNode.depth >= 1 && parentNode.depth <= 5) {
+                //     let foundRight = lookForTwins(parentNode.parent, nodeRight.state)
+                //     let foundLeft = lookForTwins(parentNode.parent, nodeLeft.state)
+
+                //     if (foundRight == false) {
+                //         nodeRight.id = ++nodeId
+                //         parentNode.children.push(nodeRight)
+                //         queue.push(nodeRight)
+                //         //nodeHistory.push(nodeRight)
+                //     }
+                //     if (foundLeft == false) {
+                //         nodeLeft.id = ++nodeId
+                //         parentNode.children.push(nodeLeft)
+                //         queue.push(nodeLeft)
+                //         //nodeHistory.push(nodeLeft)
+                //     } 
+
+                //     function lookForTwins(a, b) {
+                //         if (a.depth === -1) {
+                //             return false
+                //         } else if (a.state == b) {
+                //             return true
+                //         }
+                //         return lookForTwins(a.parent, b)
+                //     }
+                // }
+
+
+                ////// OPTIMALIZATION 2: DON'T REPEAT ANY ANCESTORS IN STRAIGHT LINE //////
+                ////// note: not that bad
+
+                let foundRight = lookForTwins(parentNode.parent, nodeRight.state)
+                let foundLeft = lookForTwins(parentNode.parent, nodeLeft.state)
 
                 if (foundRight == false) {
                     nodeRight.id = ++nodeId
@@ -132,51 +207,48 @@ class SolutionFinder {
                     queue.push(nodeLeft)
                     nodeHistory.push(nodeLeft)
                 } 
-                
-                function checkAbove(node, leaf) {
-                    if (node.state == leaf.state) {
-                        //console.log(leaf.depth-node.depth)
-                        if ((leaf.depth - node.depth) > 2) {
-                            //console.log(leaf.parent.children)
-                        }
-                        return true
-                    } else if (node.depth > 0) {
-                        checkAbove(node.parent, leaf)
-                    } else if (node.depth == 0 && node.state != leaf.state) {
+
+                function lookForTwins(a, b) {
+                    if (a.depth === -1) {
                         return false
-                    } else if (node.depth == 0 && node.state == leaf.state) {
+                    } else if (a.state == b) {
                         return true
                     }
-                    return false
+                    return lookForTwins(a.parent, b)
                 }
                 
-                ////// OPTIMALIZATION 1: DON'T REPEAT GRANDPARENTS
+                ////// OPTIMALIZATION 1: DON'T REPEAT GRANDPARENTS ////////////////////////
+                ////// note: takes about 0.2 sec to reach and complete level 5 deep
+
                 // if (nodeRight.state != parentNode.parent.state) {
                 //     parentNode.children.push(nodeRight)
+                //     nodeRight.id = ++nodeId
                 //     queue.push(nodeRight)
-                // } else { 
-                //     nodeId-- // to be fixed
                 // }
                 // if (nodeLeft.state != parentNode.parent.state) {
                 //     parentNode.children.push(nodeLeft)
+                //     nodeLeft.id = ++nodeId
                 //     queue.push(nodeLeft)
-                // } else { 
-                //     nodeId-- // to be fixed
                 // }
                 
-                ////// NO OPTIMALIZATION
+                ////// NO OPTIMALIZATION //////////////////////////////////////////////////
+                ////// note: takes about 0.2 sec to reach and complete level 5 deep
+
                 // parentNode.children.push(nodeRight, nodeLeft)
                 // queue.push(nodeRight, nodeLeft)
 
-                //////
+                ///////////////////////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////////////////////////////////
 
-                if (checkIfSolved(nodeLeft.state, this.patterns.whiteCross)) {
+                if (boundCheckIfSolved(nodeLeft.state, crossesArr)) {
                     boundSolutionHandler(nodeLeft)
                     keepSearching = false
+                    this.solution = nodeLeft
                     break
-                } else if (checkIfSolved(nodeRight.state, this.patterns.whiteCross)) {
+                } else if (boundCheckIfSolved(nodeRight.state, crossesArr)) {
                     boundSolutionHandler(nodeRight)
                     keepSearching = false
+                    this.solution = nodeRight
                     break
                 } 
             }
@@ -187,17 +259,21 @@ class SolutionFinder {
         console.log(root, "root")
 
         console.log(nodeHistory.length, "history length")
-
-        // let testCube = cubeCopy.turn(new Turn(facesDefault[1], true)) 
-        // let nextState = rotor(faceSouth, cubeCopy.state)
+        console.log(allNodesArr.sort((a,b) => {
+            return a.children.length - b.children.length
+        }))
 
         function checkIfSolved(state, pattern) {
-            for (let i = 0; i < state.length; i++) {
-                if (state[i] !== pattern[i] && pattern[i] !== ".") {
+            let result = pattern.some(pat => {
+                for (let i = 0; i < state.length; i++) {
+                    if (state[i] !== pat[i] && pat[i] !== ".") {
                     return false
+                    }
                 }
-            }
-            return true
+                console.log(pat)
+                return true
+            })
+            return result
         }        
         function handleSolutionNode(solutionNode) {
             solutionNode.solved = true
@@ -228,3 +304,4 @@ class SolutionFinder {
         }
     }
 }
+

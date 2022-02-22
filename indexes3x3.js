@@ -28,7 +28,7 @@ const ringEast = [
 ...getRight(faceBottom)
 ]
 const ringNorth = [  
-    ...getRight(faceEast),
+...getRight(faceEast),
 ...getUp(faceTop),
 ...getLeft(faceWest),
 ...getDown(faceBottom)

@@ -5,15 +5,7 @@ class SolutionFinder {
         this.stateToSolve = this.cubeToSolve.state 
         this.solution = {}
         this.solutionPath = []
-        this.patterns = {
-            faces: {
-                orange: "ooooooooow..w..w.............y..y..yb..b..b..g..g..g..",
-                white:  "..o..o..owwwwwwwwwr..r..r.................bbbggg......",
-                red:    "...........w..w..wrrrrrrrrry..y..y....b..b..b..g..g..g",
-                yellow: "o..o..o.............r..r..ryyyyyyyyybbb............ggg",
-                blue:   "ooo......www......rrr......yyy......bbbbbbbbb.........",
-                green:  "......ooo......www......rrr......yyy.........ggggggggg",
-            },
+        this.patterns = { // TEDIOUS
             crosses: {
                 orangeCross: ".o.ooo.o....w...................y......b........g.....",
                 whiteCross:  ".....o....w.www.w....r.....................b..g.......",
@@ -22,14 +14,26 @@ class SolutionFinder {
                 blueCross:   ".o........w........r........y........b.bbb.b..........",
                 greenCross:  ".......o........w........r........y...........g.ggg.g."
             },
+            faces: {
+                orangeWall: "ooooooooow..w..w.............y..y..yb..b..b..g..g..g..",
+                whiteWall:  "..o..o..owwwwwwwwwr..r..r.................bbbggg......",
+                redWall:    "...........w..w..wrrrrrrrrry..y..y....b..b..b..g..g..g",
+                yellowWall: "o..o..o.............r..r..ryyyyyyyyybbb............ggg",
+                blueWall:   "ooo......www......rrr......yyy......bbbbbbbbb.........",
+                greenWall:  "......ooo......www......rrr......yyy.........ggggggggg",
+            },
         }
     }
     debugPatterns() {
         // let cube = new Cube(this.patterns.crosses.yellowCross)
         // cube.log()
-        Object.keys(solver.patterns.crosses).forEach(color => {
+        Object.keys(this.patterns.crosses).forEach(color => {
             let cube = new Cube(this.patterns.crosses[color])
-            console.log(color)
+            console.log(color + ":")
+            cube.log()
+        })
+        Object.keys(this.patterns.faces).forEach(color => {
+            let cube = new Cube(this.patterns.faces[color])
             console.log(color + ":")
             cube.log()
         })

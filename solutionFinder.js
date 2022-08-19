@@ -6,13 +6,32 @@ class SolutionFinder {
         this.solution = {}
         this.solutionPath = []
         this.patterns = { // TEDIOUS
-            crosses: {
-                orangeCross: ".o.ooo.o....w...................y......b........g.....",
-                whiteCross:  ".....o....w.www.w....r.....................b..g.......",
-                redCross:    "..............w....r.rrr.r....y..........b........g...",
-                yellowCross: "...o...................r....y.yyy.y..b..............g.",
-                blueCross:   ".o........w........r........y........b.bbb.b..........",
-                greenCross:  ".......o........w........r........y...........g.ggg.g."
+            solvedCubeContainer: {
+                solvedCubePattern: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg",
+            },
+            whiteWallSteps: {
+                0:  "....o.....w..w........r........y........b..b.....g....",
+                1:  "....o.....w..ww......rr........y........b..b.....g....",
+                2:  "....o.....w..ww.w....rr........y........b..b..g..g....",
+                3:  "....oo....w.www.w....rr........y........b..b..g..g....",
+                4:  "....oo....wwwww.w.r..rr........y........b..bb.g..g....",
+                5:  "....oo....wwwww.wwr..rr.r......y........b..bb.gg.g....",
+                6:  "....oo..o.wwwwwwwwr..rr.r......y........b..bbggg.g....",
+                7:  "..o.oo..owwwwwwwwwr..rr.r......y........b.bbbggg.g....",
+            },
+            yellowCorners: {
+                0:  "o.o.ooo.owwwwwwwwwr.rrr.r.ry.y.y.y.yb.b.b.bbbggg.g.g.g",
+            },
+            crossesGood: {
+                //orangeCross: ".o.ooo.o....w...................y......b........g.....",
+                orangeCross: ".o.ooo.o....ww........r........yy......bb.......gg....",
+                whiteCross:  "....oo....w.www.w....rr........y........b..b..g..g....",
+                redCross:    "....o........ww....r.rrr.r....yy........bb.......gg...",
+                yellowCross: "...oo........w........rr....y.yyy.y..b..b........g..g.",
+                blueCross:   ".o..o.....w..w.....r..r.....y..y.....b.bbb.b.....g....",
+                greenCross:  "....o..o.....w..w.....r..r.....y..y.....b.....g.ggg.g.",
+            },
+            crossesRotated: {
             },
             faces: {
                 orangeWall: "ooooooooow..w..w.............y..y..yb..b..b..g..g..g..",
@@ -22,21 +41,89 @@ class SolutionFinder {
                 blueWall:   "ooo......www......rrr......yyy......bbbbbbbbb.........",
                 greenWall:  "......ooo......www......rrr......yyy.........ggggggggg",
             },
+            topCorners: {
+                orangeCorners: "o.o.o.o.ow.....w.............y.....yb.....b..g.....g..",
+                whiteCorners:  "..o.....ow.w.w.w.wr.....r.................b.bg.g......",
+                redCorners:    "...........w.....wr.r.r.r.ry.....y....b.....b..g.....g",
+                yellowCorners: "o.....o.............r.....ry.y.y.y.yb.b............g.g",
+                blueCorners:   "o.o......w.w......r.r......y.y......b.b.b.b.b.........",
+                greenCorners:  "......o.o......w.w......r.r......y.y.........g.g.g.g.g",
+            },
+            allCornersCont: {
+                allCornersPatt: "o.o.o.o.ow.w.w.w.wr.r.r.r.ry.y.y.y.yb.b.b.b.bg.g.g.g.g",
+            },
         }
+        this.patterns.crossesRotated.orangeCross0 = this.patterns.crossesGood.orangeCross
+        this.patterns.crossesRotated.orangeCross1 = rotor(facesDefault[0],this.patterns.crossesRotated.orangeCross0)
+        this.patterns.crossesRotated.orangeCross2 = rotor(facesDefault[0],this.patterns.crossesRotated.orangeCross1)
+        this.patterns.crossesRotated.orangeCross3 = rotor(facesDefault[0],this.patterns.crossesRotated.orangeCross2)
+
+        this.patterns.crossesRotated.whiteCross0 = this.patterns.crossesGood.whiteCross
+        this.patterns.crossesRotated.whiteCross1 = rotor(facesDefault[1],this.patterns.crossesRotated.whiteCross0)
+        this.patterns.crossesRotated.whiteCross2 = rotor(facesDefault[1],this.patterns.crossesRotated.whiteCross1)
+        this.patterns.crossesRotated.whiteCross3 = rotor(facesDefault[1],this.patterns.crossesRotated.whiteCross2)
+
+        this.patterns.crossesRotated.redCross0 = this.patterns.crossesGood.redCross
+        this.patterns.crossesRotated.redCross1 = rotor(facesDefault[2],this.patterns.crossesRotated.redCross0)
+        this.patterns.crossesRotated.redCross2 = rotor(facesDefault[2],this.patterns.crossesRotated.redCross1)
+        this.patterns.crossesRotated.redCross3 = rotor(facesDefault[2],this.patterns.crossesRotated.redCross2)
+
+        this.patterns.crossesRotated.yellowCross0 = this.patterns.crossesGood.yellowCross
+        this.patterns.crossesRotated.yellowCross1 = rotor(facesDefault[3],this.patterns.crossesRotated.yellowCross0)
+        this.patterns.crossesRotated.yellowCross2 = rotor(facesDefault[3],this.patterns.crossesRotated.yellowCross1)
+        this.patterns.crossesRotated.yellowCross3 = rotor(facesDefault[3],this.patterns.crossesRotated.yellowCross2)
+
+        this.patterns.crossesRotated.blueCross0 = this.patterns.crossesGood.blueCross
+        this.patterns.crossesRotated.blueCross1 = rotor(facesDefault[4],this.patterns.crossesRotated.blueCross0)
+        this.patterns.crossesRotated.blueCross2 = rotor(facesDefault[4],this.patterns.crossesRotated.blueCross1)
+        this.patterns.crossesRotated.blueCross3 = rotor(facesDefault[4],this.patterns.crossesRotated.blueCross2)
+
+        this.patterns.crossesRotated.greenCross0 = this.patterns.crossesGood.greenCross
+        this.patterns.crossesRotated.greenCross1 = rotor(facesDefault[5],this.patterns.crossesRotated.greenCross0)
+        this.patterns.crossesRotated.greenCross2 = rotor(facesDefault[5],this.patterns.crossesRotated.greenCross1)
+        this.patterns.crossesRotated.greenCross3 = rotor(facesDefault[5],this.patterns.crossesRotated.greenCross2)
+    }
+    scrambleAgain() {
+        this.cubeToSolve.scramble()
+        this.stateToSolve = this.cubeToSolve.state
     }
     debugPatterns() {
         // let cube = new Cube(this.patterns.crosses.yellowCross)
         // cube.log()
-        Object.keys(this.patterns.crosses).forEach(color => {
-            let cube = new Cube(this.patterns.crosses[color])
+        // Object.keys(this.patterns.crosses).forEach(color => {
+        //     let cube = new Cube(this.patterns.crosses[color])
+        //     console.log(color + ":")
+        //     cube.log()
+        // })
+
+        //this is good
+        // Object.keys(this.patterns.crossesRotated).forEach(color => {
+        //     let cube = new Cube(this.patterns.crossesRotated[color])
+        //     console.log(color + ":")
+        //     cube.log()
+        // })
+
+        Object.keys(this.patterns.whiteWallSteps).forEach(color => {
+            let cube = new Cube(this.patterns.whiteWallSteps[color])
             console.log(color + ":")
             cube.log()
         })
-        Object.keys(this.patterns.faces).forEach(color => {
-            let cube = new Cube(this.patterns.faces[color])
+        Object.keys(this.patterns.yellowCorners).forEach(color => {
+            let cube = new Cube(this.patterns.yellowCorners[color])
             console.log(color + ":")
             cube.log()
         })
+
+        // Object.keys(this.patterns.faces).forEach(color => {
+        //     let cube = new Cube(this.patterns.faces[color])
+        //     console.log(color + ":")
+        //     cube.log()
+        // })
+        // Object.keys(this.patterns.topCorners).forEach(color => {
+        //     let cube = new Cube(this.patterns.topCorners[color])
+        //     console.log(color + ":")
+        //     cube.log()
+        // })
     }
     findAnyWall() {
         if (this.cubeToSolve.state != this.stateToSolve) {
@@ -75,16 +162,18 @@ class SolutionFinder {
         const boundSolutionHandler = handleSolutionNode.bind(this)
         const boundCheckIfSolved = checkIfSolved.bind(this)
 
-        let pattern = this.patterns.crosses.greenCross
+        let patternToFind = this.patterns.crossesRotated
         let crossesArr = []
-        for (const cross in this.patterns.crosses) crossesArr.push(this.patterns.crosses[cross])
+        // for (const cross in this.patterns.crosses) crossesArr.push(this.patterns.crosses[cross])
+        for (const cross in patternToFind) crossesArr.push(patternToFind[cross])
 
         while (queue.length > 0 && keepSearching) {
             
             const parentNode = queue[0]
-            if (parentNode.depth >= 6 || queue.length > 1000000) {
+            if (parentNode.depth >= 6 || queue.length > 800000) {
                 keepSearching = false
                 console.log((performance.now() - t0) / 1000 + " sec")
+                console.log("break")
                 break
             } 
 
@@ -246,11 +335,15 @@ class SolutionFinder {
 
                 if (boundCheckIfSolved(nodeLeft.state, crossesArr)) {
                     boundSolutionHandler(nodeLeft)
+                    //debug(crossArr)
+                    //console.log(crossesArr)
                     keepSearching = false
                     this.solution = nodeLeft
                     break
                 } else if (boundCheckIfSolved(nodeRight.state, crossesArr)) {
                     boundSolutionHandler(nodeRight)
+                    //debug(crossArr)
+                    //console.log(crossesArr)
                     keepSearching = false
                     this.solution = nodeRight
                     break
@@ -258,14 +351,14 @@ class SolutionFinder {
             }
             queue.shift()
         }
-        console.log(queue.length, "queue length")
-        console.log(queue[queue.length - 1],"last in queue")
-        console.log(root, "root")
+        // console.log(queue.length, "queue length")
+        // console.log(queue[queue.length - 1],"last in queue")
+        // console.log(root, "root")
 
-        console.log(nodeHistory.length, "history length")
-        console.log(allNodesArr.sort((a,b) => {
-            return a.children.length - b.children.length
-        }))
+        // console.log(nodeHistory.length, "history length")
+        // console.log(allNodesArr.sort((a,b) => {
+        //     return a.children.length - b.children.length
+        // }))
 
         function checkIfSolved(state, pattern) {
             let result = pattern.some(pat => {
@@ -274,7 +367,9 @@ class SolutionFinder {
                     return false
                     }
                 }
-                console.log(pat)
+                console.log("A PATTERN HAS BEEN FOUND:", Object.keys(patternToFind).find(key => patternToFind[key] === pat))
+                //console.log(Object.keys(patternToFind).find(key => patternToFind[key] === pat))
+                //debug(pat)
                 return true
             })
             return result
@@ -282,9 +377,9 @@ class SolutionFinder {
         function handleSolutionNode(solutionNode) {
             solutionNode.solved = true
             this.solution = solutionNode
-            console.log("SOLVED")    
-            console.log(solutionNode)
-            debug(solutionNode.state)
+            //console.log("SOLVED (some pattern has been found)")    
+            //console.log(solutionNode)
+            //debug(solutionNode.state)
             console.log((performance.now() - t0) / 1000 + " sec")
         }
         // ???

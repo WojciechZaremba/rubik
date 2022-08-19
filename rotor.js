@@ -19,4 +19,3 @@ function rotor(faceToTurn, currentState, direction = true, indexes = indexes3x3)
 
     return temp.join("")
 }
-

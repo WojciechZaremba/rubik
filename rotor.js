@@ -1,5 +1,8 @@
+console.log("rotor loaded")
 
-function rotor(faceToTurn, currentState, direction = true, indexes = indexes3x3) {
+
+function rotor(faceToTurn, currentState, indexes, direction = true,) {
+    //console.log("test")
     let faceIdx = indexes.facesDefault.indexOf(faceToTurn)
     let temp = currentState.split("")
     let diff = faceIdx * 9
@@ -19,3 +22,4 @@ function rotor(faceToTurn, currentState, direction = true, indexes = indexes3x3)
 
     return temp.join("")
 }
+//rotor()

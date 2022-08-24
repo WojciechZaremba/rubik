@@ -1,3 +1,4 @@
+console.log("cube class loaded")
 
 class Cube {
     constructor(stateStr = "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg") { // the cube starts with solved state
@@ -52,10 +53,10 @@ class Turn { // every turn will be served as an object created by this class
         this.direction = turnClockWise
     }
     execute(currentState) {
-        return rotor(this.faceToRotate, currentState, this.direction, indexes3x3)
+        return rotor(this.faceToRotate, currentState, indexes3x3, this.direction)
     }
     undo(currentState) {
-        return rotor(this.faceToRotate, currentState, !this.direction, indexes3x3)
+        return rotor(this.faceToRotate, currentState, indexes3x3, !this.direction)
     }
 }
 

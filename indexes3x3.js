@@ -1,3 +1,4 @@
+console.log("indexes loaded")
 
 // faces are collected left to right top to bottom (?)
 const faceWest = [0,1,2,3,4,5,6,7,8]
@@ -89,3 +90,8 @@ const indexes3x3 = {
     ringsRotatedCounterClockwise: ringsRotatedCounterClockwise
 }
 
+const idxsSimpl = {
+
+}
+
+//console.log(rotor)

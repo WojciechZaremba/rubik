@@ -1,3 +1,5 @@
+console.log("debug loaded")
+
 function debug(cubeState) {
     const logsParts      = ["", "", ""] // = ["TOP","SIDES","BOTTOM"]
     const logsStyles = [[], [], []]

@@ -33,6 +33,12 @@ class Cube {
         }
         this.log()
     }
+    instaSolve() {
+        this.state = "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg"
+        this.history = []
+        this.historyIndex = 0
+        this.log()
+    }
     scramble() {
         let turnsLeft = Math.floor(Math.random() * 25 + 9) // arbitrary range of random moves
         while (turnsLeft > 0) {

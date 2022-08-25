@@ -3,13 +3,13 @@ console.log("SolutionFinder loaded")
 class SolutionFinder {
     constructor(cubeToSolve) {
         this.cubeToSolve = cubeToSolve
-        this.stateToSolve = this.cubeToSolve.state 
+        this.stateToSolve = this.cubeToSolve.state
         this.solution = {}
         this.solutionPath = []
         this.currentPatternIdx = 0
         this.finderIteration = 0
+        this.keepIterator = true
         this.patterns = { // TEDIOUS
-
             algorithmSteps: {
                 0:  "....o.....w..w........r........y........b..b.....g....",
                 1:  "....o.....w..ww......rr........y........b..b.....g....",
@@ -28,12 +28,14 @@ class SolutionFinder {
             },
         }
     }
+
     scrambleAgain() {
+        this.cubeToSolve.instaSolve()
         this.cubeToSolve.scramble()
         this.stateToSolve = this.cubeToSolve.state
     }
-    debugPatterns() {
 
+    debugPatterns() {
         Object.keys(this.patterns.whiteWallSteps).forEach(color => {
             let cube = new Cube(this.patterns.whiteWallSteps[color])
             console.log(color + ":")
@@ -44,19 +46,44 @@ class SolutionFinder {
             console.log(color + ":")
             cube.log()
         })
-
     }
+
     findAnyWall() {
         if (this.cubeToSolve.state != this.stateToSolve) {
             this.stateToSolve = this.cubeToSolve.state
         }
         console.log("wall")
     }
-    search() {
-        if (this.currentPatternIdx > 2) return
+
+    iterTest(x) {
+        while(x > 0) {
+            console.log(`%c========================== tests left ${x} ==========================`, 'color: red')
+            // this.cubeToSolve.scrambe()
+            // this.stateToSolve = this.cubeToSolve.state
+            this.currentPatternIdx = 0
+            this.finderIteration = 0
+            this.keepIterator = true
+            this.scrambleAgain()
+            this.sIterator()
+            x--
+        }
+    }
+
+    sIterator() {
         let t0 = performance.now()
-        console.log(`searching for pattern number ${this.currentPatternIdx}`)
-        if (this.cubeToSolve.state != this.stateToSolve) this.stateToSolve = this.cubeToSolve.state
+        while(this.finderIteration < 3 && this.keepIterator) {
+            console.log(`%c//////////// ITERATION ${this.finderIteration} ////////////`, 'color: #bada55')
+            this.search()
+            this.finderIteration++
+        }
+        console.log((performance.now()-t0)/1000)
+    }
+
+    search() {
+        if (this.currentPatternIdx > 4) return console.log("currentPatternIdx > 4")
+        let t0 = performance.now()
+        console.log(`Searching for pattern number ${this.currentPatternIdx}`)
+        //if (this.cubeToSolve.state != this.stateToSolve) this.stateToSolve = this.cubeToSolve.state
 
         const root = {
             depth: 0,
@@ -93,10 +120,11 @@ class SolutionFinder {
         while (queue.length > 0 && keepSearching) {
             
             const parentNode = queue[0]
-            if (parentNode.depth >= 6 || queue.length > 80000) {
+            if (parentNode.depth >= 6 || queue.length > 320000) {
                 keepSearching = false
                 console.log((performance.now() - t0) / 1000 + " sec")
                 console.log("break")
+                this.keepIterator = false
                 break
             } 
 
@@ -112,9 +140,11 @@ class SolutionFinder {
                 let face = faces[i]
                 let boolRight = true
                 let boolLeft = false
+                let flag180 = "180"
                 let state = queue[0].state
                 let stateTurnRight = rotor(face, state, indexes3x3, boolRight)
                 let stateTurnLeft = rotor(face, state, indexes3x3, boolLeft)
+                //let stateTurn180 = rotor(face, state, indexes3x3, boolRight, true)
                 
                 const nodeRight = {
                     depth: parentNode.depth + 1,
@@ -127,6 +157,7 @@ class SolutionFinder {
                     parent: parentNode,
                     children: []
                 }
+
                 const nodeLeft = {
                     depth: parentNode.depth + 1,
                     id: undefined,
@@ -139,11 +170,24 @@ class SolutionFinder {
                     children: []
                 }
 
+                // const node180 = {
+                //     depth: parentNode.depth + 1,
+                //     id: undefined,
+                //     state: stateTurn180,
+                //     prevMove: {
+                //         face: face,
+                //         direction: flag180
+                //     },
+                //     parent: parentNode,
+                //     children: []
+                // }
+
                 ////// OPTIMALIZATION 2: DON'T REPEAT ANY ANCESTORS IN STRAIGHT LINE //////
                 ////// note: not that bad
 
                 let foundRight = lookForTwins(parentNode.parent, nodeRight.state)
                 let foundLeft = lookForTwins(parentNode.parent, nodeLeft.state)
+                // let found180 = lookForTwins(parentNode.parent, node180.state)
 
                 if (foundRight == false) {
                     nodeRight.id = ++nodeId
@@ -157,6 +201,12 @@ class SolutionFinder {
                     queue.push(nodeLeft)
                     nodeHistory.push(nodeLeft)
                 } 
+                // if (found180 == false) {
+                //     node180.id = ++nodeId
+                //     parentNode.children.push(nodeLeft)
+                //     queue.push(node180)
+                //     nodeHistory.push(node180)
+                // } 
 
                 function lookForTwins(a, b) {
                     if (a.depth === -1) {
@@ -193,13 +243,10 @@ class SolutionFinder {
                 if (boundCheckIfSolved(nodeLeft.state, patternsArr)) {
                     boundSolutionHandler(nodeLeft)
                     // debug(crossArr)
-                    // console.log(patternsArr)
+                    //console.log(patternsArr)
                     keepSearching = false
                     this.solution = nodeLeft
-
-                    this.patternToFind = nodeLeft.state
-                    this.currentPatternIdx++
-
+                    this.stateToSolve = nodeLeft.state
                     break
                 } else if (boundCheckIfSolved(nodeRight.state, patternsArr)) {
                     boundSolutionHandler(nodeRight)
@@ -207,10 +254,7 @@ class SolutionFinder {
                     //console.log(patternsArr)
                     keepSearching = false
                     this.solution = nodeRight
-
-                    this.patternToFind = nodeRight.state
-                    this.currentPatternIdx++
-
+                    this.stateToSolve = nodeRight.state
                     break
                 } 
             }
@@ -229,22 +273,30 @@ class SolutionFinder {
                     return false
                     }
                 }
-                console.log("A PATTERN HAS BEEN FOUND:", Object.keys(patternToFind).find(key => patternToFind[key] === pat))
-                //console.log(Object.keys(patternToFind).find(key => patternToFind[key] === pat))
-                debug(pat)
-                debug(state)
-                return true
+                if (pattern.indexOf(pat) > this.currentPatternIdx) {
+                    this.currentPatternIdx = pattern.indexOf(pat) + 1
+                    // just use indexOf lmao
+                    console.log("FOUND PATTERN NUMBER", Object.keys(patternToFind).find(key => patternToFind[key] === pat))
+                    debug(pat)
+                    console.log("Current cube state:")
+                    debug(state)
+                    return true
+                } else {
+                    return false
+                }
             })
             return result
-        }        
+        }     
+
         function handleSolutionNode(solutionNode) {
             solutionNode.solved = true
             this.solution = solutionNode
             //console.log("SOLVED (some pattern has been found)")    
-            console.log(solutionNode)
+            //console.log(solutionNode)
             //debug(solutionNode.state)
-            console.log((performance.now() - t0) / 1000 + " sec")
+            console.log("Found in: " + (performance.now() - t0) / 1000 + " sec")
         }
+        
     }
 }
 

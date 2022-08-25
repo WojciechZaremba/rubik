@@ -1,7 +1,7 @@
 console.log("rotor loaded")
 
 
-function rotor(faceToTurn, currentState, indexes, direction = true,) {
+function rotor(faceToTurn, currentState, indexes, direction = true, turn180 = false) {
     //console.log("test")
     let faceIdx = indexes.facesDefault.indexOf(faceToTurn)
     let temp = currentState.split("")
@@ -20,6 +20,11 @@ function rotor(faceToTurn, currentState, indexes, direction = true,) {
         temp[ringsDefault[faceIdx][i]] = currentState[properRotatedRings[faceIdx][i]]
     }
 
-    return temp.join("")
+    if (turn180) {
+       return rotor(faceToTurn, temp.join(""), indexes, direction, false)
+    } else {
+        return temp.join("")
+   }
+
 }
 //rotor()

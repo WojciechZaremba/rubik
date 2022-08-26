@@ -28,6 +28,27 @@ class SolutionFinder {
             solvedCubePattern: {
                 0: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg",
             },
+            tests: {
+                default: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg",
+                westCount: "ooooooooogwwgwwgwwrrrrrrrrryybyybyybwbbwbbwbbyggyggygg",
+                westClock: "ooooooooobwwbwwbwwrrrrrrrrryygyygyygybbybbybbwggwggwgg",
+                west180: "oooooooooywwywwywwrrrrrrrrryywyywyywgbbgbbgbbbggbggbgg",
+                southCount: "oobooboobwwwwwwwwwgrrgrrgrryyyyyyyyybbbbbbrrrooogggggg",
+                southClock: "oogoogoogwwwwwwwwwbrrbrrbrryyyyyyyyybbbbbbooorrrgggggg",
+                south180: "oorooroorwwwwwwwwworrorrorryyyyyyyyybbbbbbgggbbbgggggg",
+                eastCount: "ooooooooowwbwwbwwbrrrrrrrrrgyygyygyybbybbybbyggwggwggw",
+                eastClock: "ooooooooowwgwwgwwgrrrrrrrrrbyybyybyybbwbbwbbwggyggyggy",
+                east180: "ooooooooowwywwywwyrrrrrrrrrwyywyywyybbgbbgbbgggbggbggb",
+                northCount: "googoogoowwwwwwwwwrrbrrbrrbyyyyyyyyyooobbbbbbggggggrrr",
+                northClock: "boobooboowwwwwwwwwrrgrrgrrgyyyyyyyyyrrrbbbbbbggggggooo",
+                north180: "roorooroowwwwwwwwwrrorrorroyyyyyyyyygggbbbbbbggggggbbb",
+                topCount: "yyyooooooooowwwwwwwwwrrrrrrrrryyyyyybbbbbbbbbggggggggg",
+                topClock: "wwwoooooorrrwwwwwwyyyrrrrrroooyyyyyybbbbbbbbbggggggggg",
+                top180: "rrrooooooyyywwwwwwooorrrrrrwwwyyyyyybbbbbbbbbggggggggg",
+                bottomCount: "oooooowwwwwwwwwrrrrrrrrryyyyyyyyyooobbbbbbbbbggggggggg",
+                bottomClock: "ooooooyyywwwwwwooorrrrrrwwwyyyyyyrrrbbbbbbbbbggggggggg",
+                bottom180: "oooooorrrwwwwwwyyyrrrrrroooyyyyyywwwbbbbbbbbbggggggggg",
+            }
         }
     }
 
@@ -37,17 +58,25 @@ class SolutionFinder {
         this.stateToSolve = this.cubeToSolve.state
     }
 
-    debugPatterns() {
-        Object.keys(this.patterns.algorithmSteps).forEach(color => {
-            let cube = new Cube(this.patterns.algorithmSteps[color])
-            console.log(color + ":")
-            cube.log()
-        })
-        Object.keys(this.patterns.yellowCorners).forEach(color => {
-            let cube = new Cube(this.patterns.yellowCorners[color])
-            console.log(color + ":")
-            cube.log()
-        })
+    debugPatterns(what) {
+        if (what == "tests") {
+            Object.keys(this.patterns.tests).forEach(color => {
+                let cube = new Cube(this.patterns.tests[color])
+                console.log(color + ":")
+                cube.log()
+            })
+        } else {
+            Object.keys(this.patterns.algorithmSteps).forEach(color => {
+                let cube = new Cube(this.patterns.algorithmSteps[color])
+                console.log(color + ":")
+                cube.log()
+            })
+            Object.keys(this.patterns.yellowCorners).forEach(color => {
+                let cube = new Cube(this.patterns.yellowCorners[color])
+                console.log(color + ":")
+                cube.log()
+            })
+        }
     }
 
     findAnyWall() {
@@ -125,7 +154,7 @@ class SolutionFinder {
         while (queue.length > 0 && keepSearching) {
             
             const parentNode = queue[0]
-            if (parentNode.depth >= 5 || queue.length > 640000) {
+            if (parentNode.depth >= 5 || queue.length > 2560000) {
                 keepSearching = false
                 console.log((performance.now() - t0) / 1000 + " sec")
                 console.log("break")
@@ -144,6 +173,7 @@ class SolutionFinder {
             // }
 
             for (let i = 0; i < faces.length; i++) {
+                //console.log(faces)
                 let face = faces[i]
                 let boolRight = true
                 let boolLeft = false

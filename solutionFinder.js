@@ -105,7 +105,7 @@ class SolutionFinder {
 
     sIterator() {
         let t0 = performance.now()
-        while(this.finderIteration < 3 && this.keepIterator) {
+        while(this.finderIteration < 4 && this.keepIterator) {
             console.log(`%c//////////// ITERATION ${this.finderIteration} ////////////`, 'color: #bada55')
             this.search()
             this.finderIteration++
@@ -292,6 +292,14 @@ class SolutionFinder {
                     keepSearching = false
                     this.solution = nodeRight
                     this.stateToSolve = nodeRight.state
+                    break 
+                } else if (boundCheckIfSolved(node180.state, patternsArr)) {
+                    boundSolutionHandler(node180)
+                    //debug(crossArr)
+                    //console.log(patternsArr)
+                    keepSearching = false
+                    this.solution = node180
+                    this.stateToSolve = node180.state
                     break
                 } 
             }
@@ -310,7 +318,7 @@ class SolutionFinder {
                     return false
                     }
                 }
-                if (pattern.indexOf(pat) > this.currentPatternIdx) {
+                if (pattern.indexOf(pat) >= this.currentPatternIdx) {
                     this.currentPatternIdx = pattern.indexOf(pat) + 1
                     // just use indexOf lmao
                     console.log("FOUND PATTERN NUMBER", Object.keys(patternToFind).find(key => patternToFind[key] === pat))

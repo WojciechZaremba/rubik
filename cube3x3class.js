@@ -13,7 +13,7 @@ class Cube {
         this.historyIndex++
         // does the same as above: (this.historyIndex++ ?)
         // this.historyIndex = this.history.lenght
-        this.log()
+        //this.log()
     }
     undo() {
         // pop if don't want to store forward history
@@ -47,7 +47,7 @@ class Cube {
             this.turn(new Turn(facesDefault[faceIdx], Math.random() < 0.5)) // true below 0.5; faces are in indexes3x3 file
             turnsLeft--
         }
-        //this.log()
+        this.log()
     }
     log() {
         debug(this.state)

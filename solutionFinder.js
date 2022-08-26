@@ -9,6 +9,7 @@ class SolutionFinder {
         this.currentPatternIdx = 0
         this.finderIteration = 0
         this.keepIterator = true
+        this.numberOfFails = 0
         this.patterns = { // TEDIOUS
             algorithmSteps: {
                 0:  "....o.....w..w........r........y........b..b.....g....",
@@ -19,6 +20,7 @@ class SolutionFinder {
                 5:  "....oo....wwwww.wwr..rr.r......y........b..bb.gg.g....",
                 6:  "....oo..o.wwwwwwwwr..rr.r......y........b..bbggg.g....",
                 7:  "..o.oo..owwwwwwwwwr..rr.r......y........b.bbbggg.g....",
+                10: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg",
             },
             yellowCorners: {
                 0:  "o.o.ooo.owwwwwwwwwr.rrr.r.ry.y.y.y.yb.b.b.bbbggg.g.g.g",
@@ -36,8 +38,8 @@ class SolutionFinder {
     }
 
     debugPatterns() {
-        Object.keys(this.patterns.whiteWallSteps).forEach(color => {
-            let cube = new Cube(this.patterns.whiteWallSteps[color])
+        Object.keys(this.patterns.algorithmSteps).forEach(color => {
+            let cube = new Cube(this.patterns.algorithmSteps[color])
             console.log(color + ":")
             cube.log()
         })
@@ -56,6 +58,8 @@ class SolutionFinder {
     }
 
     iterTest(x) {
+        let t0 = performance.now()
+        this.numberOfFails = 0
         while(x > 0) {
             console.log(`%c========================== tests left ${x} ==========================`, 'color: red')
             // this.cubeToSolve.scrambe()
@@ -67,6 +71,7 @@ class SolutionFinder {
             this.sIterator()
             x--
         }
+        console.log(`Test ended with ${this.numberOfFails} fails in ${(performance.now()-t0)/1000} seconds`)
     }
 
     sIterator() {
@@ -80,7 +85,7 @@ class SolutionFinder {
     }
 
     search() {
-        if (this.currentPatternIdx > 4) return console.log("currentPatternIdx > 4")
+        if (this.currentPatternIdx > 3) return console.log("currentPatternIdx > 3")
         let t0 = performance.now()
         console.log(`Searching for pattern number ${this.currentPatternIdx}`)
         //if (this.cubeToSolve.state != this.stateToSolve) this.stateToSolve = this.cubeToSolve.state
@@ -120,11 +125,13 @@ class SolutionFinder {
         while (queue.length > 0 && keepSearching) {
             
             const parentNode = queue[0]
-            if (parentNode.depth >= 6 || queue.length > 320000) {
+            if (parentNode.depth >= 5 || queue.length > 640000) {
                 keepSearching = false
                 console.log((performance.now() - t0) / 1000 + " sec")
                 console.log("break")
+                console.log(queue[queue.length - 1])
                 this.keepIterator = false
+                this.numberOfFails++
                 break
             } 
 
@@ -144,7 +151,7 @@ class SolutionFinder {
                 let state = queue[0].state
                 let stateTurnRight = rotor(face, state, indexes3x3, boolRight)
                 let stateTurnLeft = rotor(face, state, indexes3x3, boolLeft)
-                //let stateTurn180 = rotor(face, state, indexes3x3, boolRight, true)
+                let stateTurn180 = rotor(face, state, indexes3x3, boolRight, true)
                 
                 const nodeRight = {
                     depth: parentNode.depth + 1,
@@ -170,37 +177,37 @@ class SolutionFinder {
                     children: []
                 }
 
-                // const node180 = {
-                //     depth: parentNode.depth + 1,
-                //     id: undefined,
-                //     state: stateTurn180,
-                //     prevMove: {
-                //         face: face,
-                //         direction: flag180
-                //     },
-                //     parent: parentNode,
-                //     children: []
-                // }
+                const node180 = {
+                    depth: parentNode.depth + 1,
+                    id: undefined,
+                    state: stateTurn180,
+                    prevMove: {
+                        face: face,
+                        direction: flag180
+                    },
+                    parent: parentNode,
+                    children: []
+                }
 
                 ////// OPTIMALIZATION 2: DON'T REPEAT ANY ANCESTORS IN STRAIGHT LINE //////
                 ////// note: not that bad
 
-                let foundRight = lookForTwins(parentNode.parent, nodeRight.state)
-                let foundLeft = lookForTwins(parentNode.parent, nodeLeft.state)
+                // let foundRight = lookForTwins(parentNode.parent, nodeRight.state)
+                // let foundLeft = lookForTwins(parentNode.parent, nodeLeft.state)
                 // let found180 = lookForTwins(parentNode.parent, node180.state)
 
-                if (foundRight == false) {
-                    nodeRight.id = ++nodeId
-                    parentNode.children.push(nodeRight)
-                    queue.push(nodeRight)
-                    nodeHistory.push(nodeRight)
-                }
-                if (foundLeft == false) {
-                    nodeLeft.id = ++nodeId
-                    parentNode.children.push(nodeLeft)
-                    queue.push(nodeLeft)
-                    nodeHistory.push(nodeLeft)
-                } 
+                // if (foundRight == false) {
+                //     nodeRight.id = ++nodeId
+                //     parentNode.children.push(nodeRight)
+                //     queue.push(nodeRight)
+                //     nodeHistory.push(nodeRight)
+                // }
+                // if (foundLeft == false) {
+                //     nodeLeft.id = ++nodeId
+                //     parentNode.children.push(nodeLeft)
+                //     queue.push(nodeLeft)
+                //     nodeHistory.push(nodeLeft)
+                // } 
                 // if (found180 == false) {
                 //     node180.id = ++nodeId
                 //     parentNode.children.push(nodeLeft)
@@ -208,14 +215,14 @@ class SolutionFinder {
                 //     nodeHistory.push(node180)
                 // } 
 
-                function lookForTwins(a, b) {
-                    if (a.depth === -1) {
-                        return false
-                    } else if (a.state == b) {
-                        return true
-                    }
-                    return lookForTwins(a.parent, b)
-                }
+                // function lookForTwins(a, b) {
+                //     if (a.depth === -1) {
+                //         return false
+                //     } else if (a.state == b) {
+                //         return true
+                //     }
+                //     return lookForTwins(a.parent, b)
+                // }
                 
                 ////// OPTIMALIZATION 1: DON'T REPEAT GRANDPARENTS ////////////////////////
                 ////// note: takes about 0.2 sec to reach and complete level 5 deep
@@ -234,8 +241,8 @@ class SolutionFinder {
                 ////// NO OPTIMALIZATION //////////////////////////////////////////////////
                 ////// note: takes about 0.2 sec to reach and complete level 5 deep
 
-                // parentNode.children.push(nodeRight, nodeLeft)
-                // queue.push(nodeRight, nodeLeft)
+                parentNode.children.push(nodeRight, nodeLeft, node180)
+                queue.push(nodeRight, nodeLeft, node180)
 
                 ///////////////////////////////////////////////////////////////////////////
                 ///////////////////////////////////////////////////////////////////////////

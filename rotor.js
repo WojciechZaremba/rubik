@@ -2,7 +2,6 @@ console.log("rotor loaded")
 
 
 function rotor(faceToTurn, currentState, indexes, direction = true, turn180 = false) {
-    //console.log("test")
     let faceIdx = indexes.facesDefault.indexOf(faceToTurn)
     let temp = currentState.split("")
     let diff = faceIdx * 9
@@ -21,7 +20,7 @@ function rotor(faceToTurn, currentState, indexes, direction = true, turn180 = fa
     }
 
     if (turn180) {
-       return rotor(faceToTurn, temp.join(""), indexes, direction, false)
+        return rotor(faceToTurn, temp.join(""), indexes, direction, false)
     } else {
         return temp.join("")
    }

@@ -13,7 +13,7 @@ class Cube {
         this.historyIndex++
         // does the same as above: (this.historyIndex++ ?)
         // this.historyIndex = this.history.lenght
-        // this.log()
+        this.log()
     }
     undo() {
         // pop if don't want to store forward history
@@ -40,13 +40,14 @@ class Cube {
         this.log()
     }
     scramble() {
+        //this.log()
         let turnsLeft = Math.floor(Math.random() * 25 + 9) // arbitrary range of random moves
         while (turnsLeft > 0) {
             let faceIdx = Math.floor(Math.random() * 6) // choose random side to turn
             this.turn(new Turn(facesDefault[faceIdx], Math.random() < 0.5)) // true below 0.5; faces are in indexes3x3 file
             turnsLeft--
         }
-        this.log()
+        //this.log()
     }
     log() {
         debug(this.state)
@@ -54,15 +55,16 @@ class Cube {
 }
 
 class Turn { // every turn will be served as an object created by this class
-    constructor(face, turnClockWise = true) {
+    constructor(face, turnClockWise = true, turn180 = false) {
         this.faceToRotate = face
         this.direction = turnClockWise
+        this.turn180 = turn180
     }
     execute(currentState) {
-        return rotor(this.faceToRotate, currentState, indexes3x3, this.direction)
+        return rotor(this.faceToRotate, currentState, indexes3x3, this.direction, this.turn180)
     }
     undo(currentState) {
-        return rotor(this.faceToRotate, currentState, indexes3x3, !this.direction)
+        return rotor(this.faceToRotate, currentState, indexes3x3, !this.direction, this.turn180)
     }
 }
 

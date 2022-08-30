@@ -4,7 +4,7 @@ class SolutionFinder {
     constructor(cubeToSolve) {
         this.cubeToSolve = cubeToSolve
         this.stateToSolve = this.cubeToSolve.state
-        this.solution = {}
+        this.solutionLeaves = []
         this.solutionPath = []
         this.currentPatternIdx = 0
         this.finderIteration = 0
@@ -86,6 +86,42 @@ class SolutionFinder {
         console.log("wall")
     }
 
+    createPath() {
+        console.log(this.solutionLeaves)
+        const len = this.solutionLeaves.length
+        let tempArr = []
+        for (let i = len - 1; i >= 0; i--) {
+            let tempNode = this.solutionLeaves[i]
+            console.log(i)
+            console.log(tempNode)
+            while (tempNode.depth > 0) {
+                tempArr.unshift(tempNode.prevMove)
+                tempNode = tempNode.parent
+            }
+        }
+        console.log(tempArr)
+        this.solutionPath = tempArr
+    }
+
+    updateCube() {
+        this.sIterator()
+        this.createPath()
+
+        const solverLastState = this.stateToSolve
+
+        for (let elem of this.solutionPath) {
+            console.log(elem)
+            let turn = new Turn(elem.face, elem.direction, elem.double)
+            console.log(turn)
+            this.cubeToSolve.turn(turn)
+        }
+
+        debug(solverLastState)
+        debug(this.cubeToSolve.state)
+
+        this.solutionPath.forEach(() => this.cubeToSolve.undo())
+    }
+
     iterTest(x) {
         let t0 = performance.now()
         this.numberOfFails = 0
@@ -125,7 +161,8 @@ class SolutionFinder {
             state: this.stateToSolve,
             prevMove: {
                 face: null,
-                direction: null
+                direction: null,
+                double: null
             },
             parent: {
                 depth: -1,
@@ -189,7 +226,8 @@ class SolutionFinder {
                     state: stateTurnRight,
                     prevMove: {
                         face: face,
-                        direction: boolRight
+                        direction: boolRight,
+                        double: false
                     },
                     parent: parentNode,
                     children: []
@@ -201,7 +239,8 @@ class SolutionFinder {
                     state: stateTurnLeft,
                     prevMove: {
                         face: face,
-                        direction: boolLeft
+                        direction: boolLeft,
+                        double: false
                     },
                     parent: parentNode,
                     children: []
@@ -213,7 +252,8 @@ class SolutionFinder {
                     state: stateTurn180,
                     prevMove: {
                         face: face,
-                        direction: flag180
+                        direction: flag180,
+                        double: true
                     },
                     parent: parentNode,
                     children: []
@@ -279,27 +319,12 @@ class SolutionFinder {
 
                 if (boundCheckIfSolved(nodeLeft.state, patternsArr)) {
                     boundSolutionHandler(nodeLeft)
-                    // debug(crossArr)
-                    //console.log(patternsArr)
-                    keepSearching = false
-                    this.solution = nodeLeft
-                    this.stateToSolve = nodeLeft.state
                     break
                 } else if (boundCheckIfSolved(nodeRight.state, patternsArr)) {
                     boundSolutionHandler(nodeRight)
-                    //debug(crossArr)
-                    //console.log(patternsArr)
-                    keepSearching = false
-                    this.solution = nodeRight
-                    this.stateToSolve = nodeRight.state
                     break 
                 } else if (boundCheckIfSolved(node180.state, patternsArr)) {
                     boundSolutionHandler(node180)
-                    //debug(crossArr)
-                    //console.log(patternsArr)
-                    keepSearching = false
-                    this.solution = node180
-                    this.stateToSolve = node180.state
                     break
                 } 
             }
@@ -335,13 +360,16 @@ class SolutionFinder {
 
         function handleSolutionNode(solutionNode) {
             solutionNode.solved = true
-            this.solution = solutionNode
+            this.solutionLeaves.push(solutionNode)
+            keepSearching = false
+            this.stateToSolve = solutionNode.state
+            console.log(solutionNode)
+
             //console.log("SOLVED (some pattern has been found)")    
             //console.log(solutionNode)
             //debug(solutionNode.state)
             console.log("Found in: " + (performance.now() - t0) / 1000 + " sec")
         }
-        
     }
 }
 

@@ -8,6 +8,7 @@ cubeScrambled.scramble()
 const solver = new SolutionFinder(cubeScrambled)
 
 window.addEventListener("keydown", (e) => {
+    if (e.key !== "Shift") console.log(e.key)
     e.preventDefault()
     if (e.key === "ArrowLeft") {
         cubeScrambled.undo()
@@ -15,29 +16,33 @@ window.addEventListener("keydown", (e) => {
         cubeScrambled.redo()
     }
     switch(e.key) {
-        case "a":
-        case "A":
-            cubeScrambled.turn(new Turn(faceWest, e.shiftKey, e.altKey))
-        break
-        case "s":
-        case "S":
-            cubeScrambled.turn(new Turn(faceSouth, e.shiftKey, e.altKey))
-        break
-        case "d":
-        case "D":
-            cubeScrambled.turn(new Turn(faceEast, e.shiftKey, e.altKey))
-        break
-        case "f":
-        case "F":
-            cubeScrambled.turn(new Turn(faceNorth, e.shiftKey, e.altKey))
+        case "o":
+        case "O":
+            cubeScrambled.turn(new Turn(faceWest, e.shiftKey, e.altKey), true)
         break
         case "w":
         case "W":
-            cubeScrambled.turn(new Turn(faceTop, e.shiftKey, e.altKey))
+            cubeScrambled.turn(new Turn(faceSouth, e.shiftKey, e.altKey), true)
         break
-        case "x":
-        case "X":
-            cubeScrambled.turn(new Turn(faceBottom, e.shiftKey, e.altKey))
+        case "r":
+        case "D":
+            cubeScrambled.turn(new Turn(faceEast, e.shiftKey, e.altKey), true)
+        break
+        case "y":
+        case "Y":
+            cubeScrambled.turn(new Turn(faceNorth, e.shiftKey, e.altKey), true)
+        break
+        case "b":
+        case "B":
+            cubeScrambled.turn(new Turn(faceTop, e.shiftKey, e.altKey), true)
+        break
+        case "g":
+        case "G":
+            cubeScrambled.turn(new Turn(faceBottom, e.shiftKey, e.altKey), true)
+        break
+        case "z":
+        case "Z":
+            cubeScrambled.scramble()
         break
         case "q":
             cubeScrambled.instaSolve()

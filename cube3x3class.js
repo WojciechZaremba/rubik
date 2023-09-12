@@ -6,11 +6,12 @@ class Cube {
         this.history = []
         this.historyIndex = 0 // player can move back and forth through the history
     }
-    turn(command) {
+    turn(command, log = false) {
         this.state = command.execute(this.state)
         this.history.splice(this.historyIndex) // delete history after the index (?)
         this.history.push(command) // add new turn to the history
         this.historyIndex++
+        if (log) this.log()
         // does the same as above: (this.historyIndex++ ?)
         // this.historyIndex = this.history.lenght
         //this.log()
@@ -30,8 +31,8 @@ class Cube {
             const command = this.history[this.historyIndex]
             this.state = command.execute(this.state)
             this.historyIndex++
-        }
-        this.log()
+            this.log()
+        } else { console.log("no history right") }
     }
     instaSolve() {
         this.state = "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg"

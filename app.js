@@ -8,8 +8,10 @@ cubeScrambled.scramble()
 const solver = new SolutionFinder(cubeScrambled)
 
 window.addEventListener("keydown", (e) => {
-    if (e.key !== "Shift") console.log(e.key)
-    e.preventDefault()
+    if (e.key !== "Control" && e.key !== "Shift" && e.key !== "I") {
+        console.log(e.key)
+        e.preventDefault()
+    }
     if (e.key === "ArrowLeft") {
         cubeScrambled.undo()
     } else if (e.key === "ArrowUp") {

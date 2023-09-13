@@ -3,7 +3,7 @@ console.log("SolutionFinder loaded")
 class SolutionFinder {
     constructor(cubeToSolve) {
         this.cubeToSolve = cubeToSolve
-        this.stateToSolve = this.cubeToSolve.state
+        this.stateToSolve = this.cubeToSolve.state 
         this.solutionLeaves = []
         this.solutionPath = []
         this.currentPatternIdx = 0
@@ -60,20 +60,20 @@ class SolutionFinder {
 
     debugPatterns(what) {
         if (what == "tests") {
-            Object.keys(this.patterns.tests).forEach(color => {
-                let cube = new Cube(this.patterns.tests[color])
-                console.log(color + ":")
+            Object.keys(this.patterns.tests).forEach(side => {
+                let cube = new Cube(this.patterns.tests[side])
+                console.log(side + ":")
                 cube.log()
             })
         } else {
-            Object.keys(this.patterns.algorithmSteps).forEach(color => {
-                let cube = new Cube(this.patterns.algorithmSteps[color])
-                console.log(color + ":")
+            Object.keys(this.patterns.algorithmSteps).forEach(side => {
+                let cube = new Cube(this.patterns.algorithmSteps[side])
+                console.log(side + ":")
                 cube.log()
             })
-            Object.keys(this.patterns.yellowCorners).forEach(color => {
-                let cube = new Cube(this.patterns.yellowCorners[color])
-                console.log(color + ":")
+            Object.keys(this.patterns.yellowCorners).forEach(side => {
+                let cube = new Cube(this.patterns.yellowCorners[side])
+                console.log(side + ":")
                 cube.log()
             })
         }

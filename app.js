@@ -103,6 +103,37 @@ function whiteCornerSpin(corner, shift) {
     window.dispatchEvent(new KeyboardEvent('keydown',{'key':`${shift ? rightWall : leftWall}`, 'shiftKey': shift}));
 }
 
+function magicSeven(corner, shift) {
+    let leftWall = ""
+    let rightWall = ""
+    const bottomWall = "f" // yellow
+    switch (corner) {
+        case 0:
+            rightWall = "x"  // green
+            leftWall = "a" // orange
+        break
+        case 1:
+            rightWall = "d"  // red
+            leftWall = "x" // green
+        break
+        case 2:
+            rightWall = "w"  // blue
+            leftWall = "d" // red
+        break
+        case 3:
+            rightWall = "a"  // orange
+            leftWall = "w" // blue
+        break
+    }
+    window.dispatchEvent(new KeyboardEvent('keydown',{'key':`${shift ? leftWall : rightWall}`, 'shiftKey': shift}));
+    window.dispatchEvent(new KeyboardEvent('keydown',{'key':`${bottomWall}`, 'shiftKey': !shift}));
+    window.dispatchEvent(new KeyboardEvent('keydown',{'key':`${shift ? leftWall : rightWall}`, 'shiftKey': !shift}));
+    window.dispatchEvent(new KeyboardEvent('keydown',{'key':`${bottomWall}`, 'shiftKey': !shift}));
+    window.dispatchEvent(new KeyboardEvent('keydown',{'key':`${shift ? rightWall : leftWall}`, 'shiftKey': !shift}));
+    window.dispatchEvent(new KeyboardEvent('keydown',{'key':`${bottomWall}`, 'shiftKey': shift}));
+    window.dispatchEvent(new KeyboardEvent('keydown',{'key':`${shift ? rightWall : leftWall}`, 'shiftKey': shift}));
+}
+
 // function w0cornerSpin(clockwise) {
 //     if (clockwise) {
 //         window.dispatchEvent(new KeyboardEvent('keydown',{'key':'x'}));

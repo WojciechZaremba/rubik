@@ -43,6 +43,7 @@ class Cube {
     scramble() {
         //this.log()
         let turnsLeft = Math.floor(Math.random() * 25 + 9) // arbitrary range of random moves
+        console.log("scrambling with", turnsLeft, "moves")
         while (turnsLeft > 0) {
             let faceIdx = Math.floor(Math.random() * 6) // choose random side to turn
             this.turn(new Turn(facesDefault[faceIdx], Math.random() < 0.5)) // true below 0.5; faces are in indexes3x3 file

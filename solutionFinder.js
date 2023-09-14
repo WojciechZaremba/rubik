@@ -150,7 +150,7 @@ class SolutionFinder {
     }
 
     search() {
-        if (this.currentPatternIdx > 3) return console.log("currentPatternIdx > 3")
+        if (this.currentPatternIdx > 4) return console.log("currentPatternIdx > 4")
         let t0 = performance.now()
         console.log(`Searching for pattern number ${this.currentPatternIdx}`)
         //if (this.cubeToSolve.state != this.stateToSolve) this.stateToSolve = this.cubeToSolve.state

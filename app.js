@@ -127,3 +127,29 @@ function sequence(sequenceType = "", cornerNum = 0, shift = Boolean) {
         break
     }
 }
+
+function swapBottomTeeth(cornerNum, reverse = false) {
+    sequence("magicSeven", cornerNum, !reverse)
+    sequence("magicSeven", cornerNum, !reverse)
+    sequence("magicSeven", cornerNum, reverse)
+    sequence("magicSeven", cornerNum, reverse)
+    sequence("magicSeven", cornerNum, !reverse)
+    sequence("magicSeven", cornerNum, !reverse)
+}
+function messWithBottomCorners(cornerNum, reverse = false) {
+    sequence("magicSeven", cornerNum, !reverse)
+    sequence("magicSeven", cornerNum, !reverse)
+    sequence("magicSeven", cornerNum, !reverse)
+    sequence("magicSeven", cornerNum, !reverse)
+}
+function asymmetricBottomSwap(cornerNum, reverse = false) {
+    sequence("magicSeven", cornerNum, !reverse)
+    sequence("magicSeven", cornerNum, !reverse)
+    cubeScrambled.turn(new Turn(faceNorth, reverse, true), true)
+    sequence("magicSeven", cornerNum, !reverse)
+    sequence("magicSeven", cornerNum, !reverse)
+    cubeScrambled.turn(new Turn(faceNorth, reverse, true), true)
+    sequence("magicSeven", cornerNum, reverse)
+    sequence("magicSeven", cornerNum, reverse)
+    swapBottomTeeth(cornerNum + 1 > 3 ? 0 : cornerNum + 1)
+}

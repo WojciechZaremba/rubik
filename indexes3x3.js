@@ -1,12 +1,12 @@
 console.log("indexes loaded")
 
 // faces are collected left to right top to bottom (?)
-const faceWest = [0,1,2,3,4,5,6,7,8]
-const faceSouth = faceWest.map(a => a + 9)
-const faceEast = faceWest.map(a => a + 9 * 2)
-const faceNorth = faceWest.map(a => a + 9 * 3)
-const faceTop = faceWest.map(a => a + 9 * 4)
-const faceBottom = faceWest.map(a => a + 9 * 5)
+const faceWest = [0,1,2,3,4,5,6,7,8] // orange
+const faceSouth = faceWest.map(a => a + 9) // white
+const faceEast = faceWest.map(a => a + 9 * 2) // red
+const faceNorth = faceWest.map(a => a + 9 * 3) // yellow
+const faceTop = faceWest.map(a => a + 9 * 4) // blue
+const faceBottom = faceWest.map(a => a + 9 * 5) // green
 
 
 // rings are collected clockwise (?)

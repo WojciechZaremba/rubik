@@ -56,26 +56,18 @@ window.addEventListener("keydown", (e) => {
         break
         case "n":
         case "N":
-            // w0cornerSpin(e.shiftKey)
-            // whiteCornerSpin(0 , e.shiftKey);
             e.altKey ? sequence("magicSeven", 0, e.shiftKey) : sequence("cornerSpin", 0, e.shiftKey)
         break
         case "m":
         case "M":
-            // w1cornerSpin(e.shiftKey)
-            // whiteCornerSpin(1 , e.shiftKey)
             e.altKey ? sequence("magicSeven", 1, e.shiftKey) : sequence("cornerSpin", 1, e.shiftKey)
         break
         case "k":
         case "K":
-            // w2cornerSpin(e.shiftKey)
-            // whiteCornerSpin(2 , e.shiftKey)
             e.altKey ? sequence("magicSeven", 2, e.shiftKey) : sequence("cornerSpin", 2, e.shiftKey)
         break
         case "j":
         case "J":
-            // w3cornerSpin(e.shiftKey)
-            // whiteCornerSpin(3 , e.shiftKey)
             e.altKey ? sequence("magicSeven", 3, e.shiftKey) : sequence("cornerSpin", 3, e.shiftKey)
         break
     }

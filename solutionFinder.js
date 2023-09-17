@@ -15,12 +15,16 @@ class SolutionFinder {
                 0:  "....o.....w..w........r........y........b..b.....g....",
                 1:  "....o.....w..ww......rr........y........b..b.....g....",
                 2:  "....o.....w..ww.w....rr........y........b..b..g..g....",
-                3:  "....oo....w.www.w....rr........y........b..b..g..g....",
-                4:  "....oo....wwwww.w.r..rr........y........b..bb.g..g....",
-                5:  "....oo....wwwww.wwr..rr.r......y........b..bb.gg.g....",
-                6:  "....oo..o.wwwwwwwwr..rr.r......y........b..bbggg.g....",
-                7:  "..o.oo..owwwwwwwwwr..rr.r......y........b.bbbggg.g....",
-                10: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg",
+                3:  "....oo....w.www.w....rr........y........b..b..g..g....", // white cross
+                4:  "..X.oo...Xw.www.w....rr........y........b.Xb..g..g....", 
+                5:  "..X.oo...XwXwww.w.X..rr........y........b.XbX.g..g....", 
+                6:  "..X.oo...XwXwww.wXX..rr.X......y........b.XbX.gX.g....", 
+                7:  "..X.oo..XXwXwwwXwXX..rr.X......y........b.XbXXgX.g....", // remove any white pieces from X
+                8:  "....oo....wwwww.w.r..rr........y........b..bb.g..g....",
+                9:  "....oo....wwwww.wwr..rr.r......y........b..bb.gg.g....",
+                10: "....oo..o.wwwwwwwwr..rr.r......y........b..bbggg.g....",
+                11: "..o.oo..owwwwwwwwwr..rr.r......y........b.bbbggg.g....", // complete white wall
+                12: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg",
             },
             yellowCorners: {
                 0:  "o.o.ooo.owwwwwwwwwr.rrr.r.ry.y.y.y.yb.b.b.bbbggg.g.g.g",
@@ -65,7 +69,17 @@ class SolutionFinder {
                 console.log(side + ":")
                 cube.log()
             })
-        } else {
+        } else if (what === "remover") {
+            let cube = new Cube(this.patterns.algorithmSteps[4])
+            cube.log()
+            let cube1 = new Cube(this.patterns.algorithmSteps[5])
+            cube1.log()
+            let cube2 = new Cube(this.patterns.algorithmSteps[6])
+            cube2.log()
+            let cube3 = new Cube(this.patterns.algorithmSteps[7])
+            cube3.log()
+        } 
+        else {
             Object.keys(this.patterns.algorithmSteps).forEach(side => {
                 let cube = new Cube(this.patterns.algorithmSteps[side])
                 console.log(side + ":")
@@ -104,7 +118,7 @@ class SolutionFinder {
     }
 
     updateCube() {
-        this.sIterator()
+        //this.sIterator()
         this.createPath()
 
         const solverLastState = this.stateToSolve
@@ -150,7 +164,7 @@ class SolutionFinder {
     }
 
     search() {
-        if (this.currentPatternIdx > 4) return console.log("currentPatternIdx > 4")
+        if (this.currentPatternIdx > 7) return console.log("currentPatternIdx > 7")
         let t0 = performance.now()
         console.log(`Searching for pattern number ${this.currentPatternIdx}`)
         //if (this.cubeToSolve.state != this.stateToSolve) this.stateToSolve = this.cubeToSolve.state
@@ -336,26 +350,30 @@ class SolutionFinder {
         // console.log(root, "root")
         // console.log(nodeHistory.length, "history length")
 
-        function checkIfSolved(state, pattern) {
-            let result = pattern.some(pat => {
-                for (let i = 0; i < state.length; i++) {
-                    if (state[i] !== pat[i] && pat[i] !== ".") {
-                    return false
+        function checkIfSolved(state, patterns, whiteCornersRemover = false) {
+            if (whiteCornersRemover) {
+                
+            } else {
+                let result = patterns.some(currentPattern => {
+                    for (let i = 0; i < state.length; i++) {
+                        if (state[i] !== currentPattern[i] && currentPattern[i] !== ".") {
+                        return false
+                        }
                     }
-                }
-                if (pattern.indexOf(pat) >= this.currentPatternIdx) {
-                    this.currentPatternIdx = pattern.indexOf(pat) + 1
-                    // just use indexOf lmao
-                    console.log("FOUND PATTERN NUMBER", Object.keys(patternToFind).find(key => patternToFind[key] === pat))
-                    debug(pat)
-                    console.log("Current cube state:")
-                    debug(state)
-                    return true
-                } else {
-                    return false
-                }
-            })
-            return result
+                    if (patterns.indexOf(currentPattern) >= this.currentPatternIdx) {
+                        this.currentPatternIdx = patterns.indexOf(currentPattern) + 1
+                        // just use indexOf lmao
+                        console.log("FOUND PATTERN NUMBER", Object.keys(patternToFind).find(key => patternToFind[key] === currentPattern))
+                        debug(currentPattern)
+                        console.log("Current cube state:")
+                        debug(state)
+                        return true
+                    } else {
+                        return false
+                    }
+                })
+                return result
+            }
         }     
 
         function handleSolutionNode(solutionNode) {

@@ -10,7 +10,7 @@ class SolutionFinder {
         this.finderIteration = 0
         this.keepIterator = true
         this.numberOfFails = 0
-        this.patterns = { // TEDIOUS
+        this.patterns = {
             algorithmSteps: {
                 0:  "....o.....w..w........r........y........b..b.....g....",
                 1:  "....o.....w..ww......rr........y........b..b.....g....",
@@ -24,13 +24,8 @@ class SolutionFinder {
                 9:  "....oo....wwwww.wwr..rr.r......y........b..bb.gg.g....",
                 10: "....oo..o.wwwwwwwwr..rr.r......y........b..bbggg.g....",
                 11: "..o.oo..owwwwwwwwwr..rr.r......y........b.bbbggg.g....", // complete white wall
-                12: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg",
-            },
-            yellowCorners: {
-                0:  "o.o.ooo.owwwwwwwwwr.rrr.r.ry.y.y.y.yb.b.b.bbbggg.g.g.g",
-            },
-            solvedCubePattern: {
-                0: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg",
+                12:  "o.o.ooo.owwwwwwwwwr.rrr.r.ry.y.y.y.yb.b.b.bbbggg.g.g.g",// yellow corners
+                13: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg",
             },
             tests: {
                 default: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg",
@@ -164,7 +159,8 @@ class SolutionFinder {
     }
 
     search() {
-        if (this.currentPatternIdx > 7) return console.log("currentPatternIdx > 7")
+        if (this.currentPatternIdx === 4) debug(this.patterns.algorithmSteps[4])
+        if (this.currentPatternIdx > 13) return console.log("currentPatternIdx > 7")
         let t0 = performance.now()
         console.log(`Searching for pattern number ${this.currentPatternIdx}`)
         //if (this.cubeToSolve.state != this.stateToSolve) this.stateToSolve = this.cubeToSolve.state
@@ -196,6 +192,7 @@ class SolutionFinder {
         
         const boundSolutionHandler = handleSolutionNode.bind(this)
         const boundCheckIfSolved = checkIfSolved.bind(this)
+        const boundCheckIfSolvedNew = checkIfSolvedNew.bind(this)
 
         let patternToFind = this.patterns.algorithmSteps
         let patternsArr = []
@@ -205,7 +202,8 @@ class SolutionFinder {
         while (queue.length > 0 && keepSearching) {
             
             const parentNode = queue[0]
-            if (parentNode.depth >= 5 || queue.length > 2560000) {
+            if (parentNode.depth >= 5) {
+            // if (parentNode.depth > 4 || queue.length > 256000) {
                 keepSearching = false
                 console.log((performance.now() - t0) / 1000 + " sec")
                 console.log("break")
@@ -331,16 +329,30 @@ class SolutionFinder {
                 ///////////////////////////////////////////////////////////////////////////
                 ///////////////////////////////////////////////////////////////////////////
 
-                if (boundCheckIfSolved(nodeLeft.state, patternsArr)) {
+                // boundCheckIfSolvedNew(nodeLeft.state)
+
+
+                if (boundCheckIfSolvedNew(nodeLeft.state)) {
                     boundSolutionHandler(nodeLeft)
                     break
-                } else if (boundCheckIfSolved(nodeRight.state, patternsArr)) {
+                } else if (boundCheckIfSolvedNew(nodeRight.state)) {
                     boundSolutionHandler(nodeRight)
                     break 
-                } else if (boundCheckIfSolved(node180.state, patternsArr)) {
+                } else if (boundCheckIfSolvedNew(node180.state)) {
                     boundSolutionHandler(node180)
                     break
                 } 
+                
+                // if (boundCheckIfSolved(nodeLeft.state, patternsArr)) {
+                //     boundSolutionHandler(nodeLeft)
+                //     break
+                // } else if (boundCheckIfSolved(nodeRight.state, patternsArr)) {
+                //     boundSolutionHandler(nodeRight)
+                //     break 
+                // } else if (boundCheckIfSolved(node180.state, patternsArr)) {
+                //     boundSolutionHandler(node180)
+                //     break
+                // } 
             }
             queue.shift()
         }
@@ -355,12 +367,14 @@ class SolutionFinder {
                 
             } else {
                 let result = patterns.some(currentPattern => {
+                    // debug(currentPattern)
                     for (let i = 0; i < state.length; i++) {
                         if (state[i] !== currentPattern[i] && currentPattern[i] !== ".") {
                         return false
                         }
                     }
-                    if (patterns.indexOf(currentPattern) >= this.currentPatternIdx) {
+                    if (patterns.indexOf(currentPattern) === this.currentPatternIdx + 1 || patterns.indexOf(currentPattern) === this.currentPatternIdx) {
+                        console.log(this.currentPatternIdx)
                         this.currentPatternIdx = patterns.indexOf(currentPattern) + 1
                         // just use indexOf lmao
                         console.log("FOUND PATTERN NUMBER", Object.keys(patternToFind).find(key => patternToFind[key] === currentPattern))
@@ -374,6 +388,33 @@ class SolutionFinder {
                 })
                 return result
             }
+        }     
+        function checkIfSolvedNew(state) {
+            let result = true
+            // console.log(this.currentPatternIdx)
+            const idx = this.currentPatternIdx
+            const pattern = this.patterns.algorithmSteps[idx]
+
+            
+            for (let i = 0; i < state.length; i++) {
+                if (pattern[i] !== "." && pattern[i] !== "X" && state[i] !== pattern[i]) {
+                    result = false
+                    break
+                }
+                if (pattern[i] === "X" && state[i] === "w") {
+                    result = false
+                    break
+                }
+            }
+            if (result) {
+                console.log("FOUND PATTERN NUMBER", idx)
+                debug(pattern)
+                console.log("Current cube state:")
+                debug(state)
+                this.currentPatternIdx += 1
+            }
+            
+            return result
         }     
 
         function handleSolutionNode(solutionNode) {

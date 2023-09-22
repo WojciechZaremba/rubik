@@ -20,15 +20,36 @@ class SolutionFinder {
                 5:  "..X.oo...XwXwww.w.X..rr........y........b.XbX.g..g....", 
                 6:  "..X.oo...XwXwww.wXX..rr.X......y........b.XbX.gX.g....", 
                 7:  "..X.oo..XXwXwwwXwXX..rr.X......y........b.XbXXgX.g....", // remove any white pieces from X
-                8:  "....oo....wwwww.w.r..rr........y........b..bb.g..g....",
-                9:  "....oo....wwwww.wwr..rr.r......y........b..bb.gg.g....",
-                10: "....oo..o.wwwwwwwwr..rr.r......y........b..bbggg.g....",
-                11: "..o.oo..owwwwwwwwwr..rr.r......y........b.bbbggg.g....", // complete white wall
-                12:  "o.o.ooo.owwwwwwwwwr.rrr.r.ry.y.y.y.yb.b.b.bbbggg.g.g.g",// yellow corners
-                13: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg",
+                8:  "..1.oo...1w.www.w....rr........y........b.1b..g..g....", 
+                9:  "..1.oo...1w2www.w.2..rr........y........b.1b2.g..g....", 
+                10: "..1.oo...1w2www.w32..rr.3......y........b.1b2.g3.g....", 
+                11: "..1.oo..41w2www4w32..rr.3......y........b.1b24g3.g....", // corner tricks: 1 - wbo, 2 - wbr, 3 - wgr, 4 - wgo
+                12: "....oo....wwwww.w.r..rr........y........b..bb.g..g....",
+                13: "....oo....wwwww.wwr..rr.r......y........b..bb.gg.g....",
+                14: "....oo..o.wwwwwwwwr..rr.r......y........b..bbggg.g....",
+                15: "..o.oo..owwwwwwwwwr..rr.r......y........b.bbbggg.g....", // complete white wall
+                16:  "o.o.ooo.owwwwwwwwwr.rrr.r.ry.y.y.y.yb.b.b.bbbggg.g.g.g",// yellow corners
+                17: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg",
             },
+            // algorithmSteps: {
+            //     0:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",
+            //     1:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",
+            //     2:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",
+            //     3:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg", // white cross
+            //     4:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg", 
+            //     5:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg", 
+            //     6:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg", 
+            //     7:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg", // remove any white pieces from X
+            //     8:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",
+            //     9:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",
+            //     10: "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",
+            //     11: "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg", // complete white wall
+            //     12: "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",// yellow corners
+            //     13: "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg"
+            // },
             tests: {
-                default: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg",
+                stressTest: "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",
+                default:    "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg",
                 westCount: "ooooooooogwwgwwgwwrrrrrrrrryybyybyybwbbwbbwbbyggyggygg",
                 westClock: "ooooooooobwwbwwbwwrrrrrrrrryygyygyygybbybbybbwggwggwgg",
                 west180: "oooooooooywwywwywwrrrrrrrrryywyywyywgbbgbbgbbbggbggbgg",
@@ -203,11 +224,12 @@ class SolutionFinder {
             
             const parentNode = queue[0]
             if (parentNode.depth >= 5) {
-            // if (parentNode.depth > 4 || queue.length > 256000) {
+            // if (parentNode.depth > 4 || queue.length > 2048000) {
                 keepSearching = false
                 console.log((performance.now() - t0) / 1000 + " sec")
                 console.log("break")
                 console.log(queue[queue.length - 1])
+                console.log(queue.length)
                 this.keepIterator = false
                 this.numberOfFails++
                 break
@@ -226,11 +248,12 @@ class SolutionFinder {
                 let face = faces[i]
                 let boolRight = true
                 let boolLeft = false
-                let flag180 = "180"
+                //let flag180 = "180"
                 let state = queue[0].state
                 let stateTurnRight = rotor(face, state, indexes3x3, boolRight)
                 let stateTurnLeft = rotor(face, state, indexes3x3, boolLeft)
-                let stateTurn180 = rotor(face, state, indexes3x3, boolRight, true)
+                
+                //let stateTurn180 = rotor(face, state, indexes3x3, boolRight, true)
                 
                 const nodeRight = {
                     depth: parentNode.depth + 1,
@@ -258,18 +281,18 @@ class SolutionFinder {
                     children: []
                 }
 
-                const node180 = {
-                    depth: parentNode.depth + 1,
-                    id: undefined,
-                    state: stateTurn180,
-                    prevMove: {
-                        face: face,
-                        direction: flag180,
-                        double: true
-                    },
-                    parent: parentNode,
-                    children: []
-                }
+                // const node180 = {
+                //     depth: parentNode.depth + 1,
+                //     id: undefined,
+                //     state: stateTurn180,
+                //     prevMove: {
+                //         face: face,
+                //         direction: flag180,
+                //         double: true
+                //     },
+                //     parent: parentNode,
+                //     children: []
+                // }
 
                 ////// OPTIMALIZATION 2: DON'T REPEAT ANY ANCESTORS IN STRAIGHT LINE //////
                 ////// note: not that bad
@@ -311,7 +334,7 @@ class SolutionFinder {
 
                 // if (nodeRight.state != parentNode.parent.state) {
                 //     parentNode.children.push(nodeRight)
-                //     nodeRight.id = ++nodeId
+                //     // nodeRight.id = ++nodeId
                 //     queue.push(nodeRight)
                 // }
                 // if (nodeLeft.state != parentNode.parent.state) {
@@ -323,8 +346,10 @@ class SolutionFinder {
                 ////// NO OPTIMALIZATION //////////////////////////////////////////////////
                 ////// note: takes about 0.2 sec to reach and complete level 5 deep
 
-                parentNode.children.push(nodeRight, nodeLeft, node180)
-                queue.push(nodeRight, nodeLeft, node180)
+                parentNode.children.push(nodeRight, nodeLeft)
+                queue.push(nodeRight, nodeLeft)
+                // parentNode.children.push(nodeRight, nodeLeft, node180)
+                // queue.push(nodeRight, nodeLeft, node180)
 
                 ///////////////////////////////////////////////////////////////////////////
                 ///////////////////////////////////////////////////////////////////////////
@@ -338,10 +363,11 @@ class SolutionFinder {
                 } else if (boundCheckIfSolvedNew(nodeRight.state)) {
                     boundSolutionHandler(nodeRight)
                     break 
-                } else if (boundCheckIfSolvedNew(node180.state)) {
-                    boundSolutionHandler(node180)
-                    break
                 } 
+                // else if (boundCheckIfSolvedNew(node180.state)) {
+                //     boundSolutionHandler(node180)
+                //     break
+                // } 
                 
                 // if (boundCheckIfSolved(nodeLeft.state, patternsArr)) {
                 //     boundSolutionHandler(nodeLeft)
@@ -362,60 +388,7 @@ class SolutionFinder {
         // console.log(root, "root")
         // console.log(nodeHistory.length, "history length")
 
-        function checkIfSolved(state, patterns, whiteCornersRemover = false) {
-            if (whiteCornersRemover) {
-                
-            } else {
-                let result = patterns.some(currentPattern => {
-                    // debug(currentPattern)
-                    for (let i = 0; i < state.length; i++) {
-                        if (state[i] !== currentPattern[i] && currentPattern[i] !== ".") {
-                        return false
-                        }
-                    }
-                    if (patterns.indexOf(currentPattern) === this.currentPatternIdx + 1 || patterns.indexOf(currentPattern) === this.currentPatternIdx) {
-                        console.log(this.currentPatternIdx)
-                        this.currentPatternIdx = patterns.indexOf(currentPattern) + 1
-                        // just use indexOf lmao
-                        console.log("FOUND PATTERN NUMBER", Object.keys(patternToFind).find(key => patternToFind[key] === currentPattern))
-                        debug(currentPattern)
-                        console.log("Current cube state:")
-                        debug(state)
-                        return true
-                    } else {
-                        return false
-                    }
-                })
-                return result
-            }
-        }     
-        function checkIfSolvedNew(state) {
-            let result = true
-            // console.log(this.currentPatternIdx)
-            const idx = this.currentPatternIdx
-            const pattern = this.patterns.algorithmSteps[idx]
 
-            
-            for (let i = 0; i < state.length; i++) {
-                if (pattern[i] !== "." && pattern[i] !== "X" && state[i] !== pattern[i]) {
-                    result = false
-                    break
-                }
-                if (pattern[i] === "X" && state[i] === "w") {
-                    result = false
-                    break
-                }
-            }
-            if (result) {
-                console.log("FOUND PATTERN NUMBER", idx)
-                debug(pattern)
-                console.log("Current cube state:")
-                debug(state)
-                this.currentPatternIdx += 1
-            }
-            
-            return result
-        }     
 
         function handleSolutionNode(solutionNode) {
             solutionNode.solved = true

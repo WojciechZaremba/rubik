@@ -24,21 +24,21 @@ function debug(cubeState) {
     for (let l = 0; l < logsParts.length; l++) {
         let temp = logsParts[l].split("") // should it work with just a string?
         for (let i = 0; i < temp.length; i++) {
-            if (temp[i].match(/[owrybgX.]/)) { // avoid escape characters so you don't syle them
+            if (temp[i].match(/[owrybgX.1234]/)) { // avoid escape characters so you don't syle them
                 switch (temp[i]) {
                     case "o":
                         logsStyles[l].push("color: orange")
                     break
                     case "w":
                         logsStyles[l].push("color: gainsboro")
-                        break
-                        case "r":
+                    break
+                    case "r":
                         logsStyles[l].push("color: tomato")
-                        break
+                    break
                     case "y":
                         logsStyles[l].push("color: gold")
-                        break
-                        case "b":
+                    break
+                    case "b":
                             logsStyles[l].push("color: cyan")
                     break
                     case "g":
@@ -47,9 +47,21 @@ function debug(cubeState) {
                     case "X":
                         logsStyles[l].push("color: black")
                     break
+                    case "1":
+                        logsStyles[l].push("color: magenta")
+                    break
+                    case "2":
+                        logsStyles[l].push("color: magenta")
+                    break
+                    case "3":
+                        logsStyles[l].push("color: magenta")
+                    break
+                    case "4":
+                        logsStyles[l].push("color: magenta")
+                    break
                     case ".":
                         logsStyles[l].push("color: grey")
-                    break
+                        break
                 }
                 temp[i] = " %c" + temp[i]
                 

@@ -180,7 +180,11 @@ class SolutionFinder {
     }
 
     search() {
-        
+        if (this.currentPatternIdx === 12){
+            console.log("%ccorners spin sequence", "color: magenta")
+            
+            console.log("a sequence should work here")
+        }
         if (this.currentPatternIdx > 17) return console.log("currentPatternIdx > 17")
         let t0 = performance.now()
         console.log(`Searching for pattern number ${this.currentPatternIdx}`)
@@ -243,7 +247,8 @@ class SolutionFinder {
             //     break
             // }
 
-            for (let i = 0; i < faces.length; i++) {
+            if (this.currentPatternIdx < 12) {
+                for (let i = 0; i < faces.length; i++) {
                 //console.log(faces)
                 let face = faces[i]
                 let boolRight = true
@@ -254,7 +259,7 @@ class SolutionFinder {
                 let stateTurnLeft = rotor(face, state, indexes3x3, boolLeft)
                 
                 //let stateTurn180 = rotor(face, state, indexes3x3, boolRight, true)
-                
+
                 const nodeRight = {
                     depth: parentNode.depth + 1,
                     id: undefined,
@@ -280,6 +285,7 @@ class SolutionFinder {
                     parent: parentNode,
                     children: []
                 }
+                
 
                 // const node180 = {
                 //     depth: parentNode.depth + 1,
@@ -382,7 +388,95 @@ class SolutionFinder {
                 //     boundSolutionHandler(node180)
                 //     break
                 // } 
+                }
+            } else if (this.currentPatternIdx >= 12  && this.currentPatternIdx <= 15) {
+                for (let i = 0; i < 4; i++) {
+                    let sequenceLeft = null
+                    let sequenceRight = null
+                    const sequenceBottom = faceNorth // yellow
+                    switch (i) {
+                        case 0:
+                            sequenceRight = faceBottom // green
+                            sequenceLeft = faceWest // orange
+                        break
+                        case 1:
+                            sequenceRight = faceEast // red
+                            sequenceLeft = faceBottom // green
+                        break
+                        case 2:
+                            sequenceRight = faceTop  // blue
+                            sequenceLeft = faceEast // red
+                        break
+                        case 3:
+                            sequenceRight = faceWest // orange
+                            sequenceLeft = faceTop // blue
+                        break
+                    }
+
+                    let state = queue[0].state
+
+                    let stateRCS = rotor(sequenceRight, state, indexes3x3, false)
+                        stateRCS = rotor(sequenceBottom, stateRCS, indexes3x3, true)
+                        stateRCS = rotor(sequenceRight, stateRCS, indexes3x3, true)
+                        stateRCS = rotor(sequenceBottom, stateRCS, indexes3x3, false)
+                        stateRCS = rotor(sequenceRight, stateRCS, indexes3x3, false)
+                        stateRCS = rotor(sequenceBottom, stateRCS, indexes3x3, true)
+                        stateRCS = rotor(sequenceRight, stateRCS, indexes3x3, true)
+
+                    let stateTurnLeft = rotor(sequenceLeft, state, indexes3x3, true)
+                        stateTurnLeft = rotor(sequenceBottom, stateTurnLeft, indexes3x3, false)
+                        stateTurnLeft = rotor(sequenceLeft, stateTurnLeft, indexes3x3, false)
+                        stateTurnLeft = rotor(sequenceBottom, stateTurnLeft, indexes3x3, true)
+                        stateTurnLeft = rotor(sequenceLeft, stateTurnLeft, indexes3x3, true)
+                        stateTurnLeft = rotor(sequenceBottom, stateTurnLeft, indexes3x3, false)
+                        stateTurnLeft = rotor(sequenceLeft, stateTurnLeft, indexes3x3, false)
+
+                    const nodeRight = {
+                        depth: parentNode.depth + 1,
+                        id: undefined,
+                        state: stateRCS  ,
+                        prevMove: {
+                            face: null,
+                            direction: true,
+                            double: false,
+                            cornerSpin: true,
+                            cornerNum: i,
+                        },
+                        parent: parentNode,
+                        children: []
+                    }
+
+                    const nodeLeft = {
+                        depth: parentNode.depth + 1,
+                        id: undefined,
+                        state: stateTurnLeft,
+                        prevMove: {
+                            face: null,
+                            direction: false,
+                            double: false,
+                            cornerSpin: true,
+                            cornerNum: i,
+                        },
+                        parent: parentNode,
+                        children: []
+                    }
+
+                    if (boundCheckIfSolvedNew(parentNode.state)) {
+                        boundSolutionHandler(parentNode)
+                        break
+                    } else if (boundCheckIfSolvedNew(nodeLeft.state)) {
+                        boundSolutionHandler(nodeLeft)
+                        break
+                    } else if (boundCheckIfSolvedNew(nodeRight.state)) {
+                        boundSolutionHandler(nodeRight)
+                        break 
+                    }
+                }
+            } else if (this.currentPatternIdx > 15) {
+
             }
+
+            
             queue.shift()
         }
 
@@ -390,8 +484,6 @@ class SolutionFinder {
         // console.log(queue[queue.length - 1],"last in queue")
         // console.log(root, "root")
         // console.log(nodeHistory.length, "history length")
-
-
 
         function handleSolutionNode(solutionNode) {
             solutionNode.solved = true

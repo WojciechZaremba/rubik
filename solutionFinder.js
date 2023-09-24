@@ -23,13 +23,14 @@ class SolutionFinder {
                 8:  "..1.oo...1w.www.w....rr........y........b.1b..g..g....", 
                 9:  "..1.oo...1w2www.w.2..rr........y........b.1b2.g..g....", 
                 10: "..1.oo...1w2www.w32..rr.3......y........b.1b2.g3.g....", 
-                11: "..1.oo..41w2www4w32..rr.3......y........b.1b24g3.g....", // corner tricks: 1 - wbo, 2 - wbr, 3 - wgr, 4 - wgo
+                11: "..1.oo..41w2www4w32..rr.3......y........b.1b24g3.g....", // white corner tricks: 1 - wbo, 2 - wbr, 3 - wgr, 4 - wgo
                 12: "....oo....wwwww.w.r..rr........y........b..bb.g..g....",
                 13: "....oo....wwwww.wwr..rr.r......y........b..bb.gg.g....",
                 14: "....oo..o.wwwwwwwwr..rr.r......y........b..bbggg.g....",
                 15: "..o.oo..owwwwwwwwwr..rr.r......y........b.bbbggg.g....", // complete white wall
-                16:  "o.o.ooo.owwwwwwwwwr.rrr.r.ry.y.y.y.yb.b.b.bbbggg.g.g.g",// yellow corners
-                17: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg",
+                16: "5.o.oo8.owwwwwwwwwr.6rr.r.76.5.y.7.85.6.b.bbbggg.g.8.7", // yellow corners trick: 5 - oby , 6 - bry, 7 - rgy, 8 - goy  
+                17: "o.o.ooo.owwwwwwwwwr.rrr.r.ry.y.y.y.yb.b.b.bbbggg.g.g.g", // yellow corners
+                18: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg",
             },
             // algorithmSteps: {
             //     0:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",
@@ -101,11 +102,11 @@ class SolutionFinder {
                 console.log(side + ":")
                 cube.log()
             })
-            Object.keys(this.patterns.yellowCorners).forEach(side => {
-                let cube = new Cube(this.patterns.yellowCorners[side])
-                console.log(side + ":")
-                cube.log()
-            })
+            // Object.keys(this.patterns.yellowCorners).forEach(side => {
+            //     let cube = new Cube(this.patterns.yellowCorners[side])
+            //     console.log(side + ":")
+            //     cube.log()
+            // })
         }
     }
 
@@ -441,7 +442,7 @@ class SolutionFinder {
                             double: false,
                             cornerSpin: true,
                             cornerNum: i,
-                        },
+                        },  
                         parent: parentNode,
                         children: []
                     }

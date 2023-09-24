@@ -24,7 +24,7 @@ function debug(cubeState) {
     for (let l = 0; l < logsParts.length; l++) {
         let temp = logsParts[l].split("") // should it work with just a string?
         for (let i = 0; i < temp.length; i++) {
-            if (temp[i].match(/[owrybgX.1234]/)) { // avoid escape characters so you don't syle them
+            if (temp[i].match(/[owrybgX.12345678]/)) { // avoid escape characters so you don't syle them
                 switch (temp[i]) {
                     case "o":
                         logsStyles[l].push("color: orange")
@@ -57,6 +57,18 @@ function debug(cubeState) {
                         logsStyles[l].push("color: magenta")
                     break
                     case "4":
+                        logsStyles[l].push("color: magenta")
+                    break
+                    case "5":
+                        logsStyles[l].push("color: magenta")
+                    break
+                    case "6":
+                        logsStyles[l].push("color: magenta")
+                    break
+                    case "7":
+                        logsStyles[l].push("color: magenta")
+                    break
+                    case "8":
                         logsStyles[l].push("color: magenta")
                     break
                     case ".":

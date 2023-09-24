@@ -32,8 +32,6 @@ function checkIfSolvedNew(state) {
     const idx = this.currentPatternIdx
     const pattern = this.patterns.algorithmSteps[idx]
     // const pattern = this.patterns.tests.stressTest
-
-    
     for (let i = 0; i < state.length; i++) {
         if (pattern[i] !== "." && pattern[i] !== "X" && !pattern[i].match(/[1234]/) && state[i] !== pattern[i]) {
             result = false
@@ -47,20 +45,15 @@ function checkIfSolvedNew(state) {
             result = false
             break
         }
-        // if (pattern[i] == "1" && state[i] !== "w" && state[i] !== "b" && state[i] !== "o") {
-        //     console.log(pattern[i])
-        //     result = false
-        //     break
-        // }
-        if (pattern[i] === "2" && state[i] !== "w" && state[i] !== "r" && state[i] !== "b") {
+        if (pattern[i] == "2" && !state[i].match(/[wrb]/)) {
             result = false
             break
         }
-        if (pattern[i] === "3" && state[i] !== "w" && state[i] !== "g" && state[i] !== "r") {
+        if (pattern[i] == "3" && !state[i].match(/[wgr]/)) {
             result = false
             break
         }
-        if (pattern[i] === "4" && state[i] !== "w" && state[i] !== "g" && state[i] !== "o") {
+        if (pattern[i] == "4" && !state[i].match(/[wgo]/)) {
             result = false
             break
         }
@@ -72,6 +65,5 @@ function checkIfSolvedNew(state) {
         debug(state)
         this.currentPatternIdx += 1
     }
-    
     return result
 }     

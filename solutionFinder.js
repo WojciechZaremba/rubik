@@ -180,8 +180,8 @@ class SolutionFinder {
     }
 
     search() {
-        if (this.currentPatternIdx === 4) debug(this.patterns.algorithmSteps[4])
-        if (this.currentPatternIdx > 13) return console.log("currentPatternIdx > 7")
+        
+        if (this.currentPatternIdx > 17) return console.log("currentPatternIdx > 17")
         let t0 = performance.now()
         console.log(`Searching for pattern number ${this.currentPatternIdx}`)
         //if (this.cubeToSolve.state != this.stateToSolve) this.stateToSolve = this.cubeToSolve.state
@@ -357,7 +357,10 @@ class SolutionFinder {
                 // boundCheckIfSolvedNew(nodeLeft.state)
 
 
-                if (boundCheckIfSolvedNew(nodeLeft.state)) {
+                if (boundCheckIfSolvedNew(parentNode.state)) {
+                    boundSolutionHandler(parentNode)
+                    break
+                } else if (boundCheckIfSolvedNew(nodeLeft.state)) {
                     boundSolutionHandler(nodeLeft)
                     break
                 } else if (boundCheckIfSolvedNew(nodeRight.state)) {

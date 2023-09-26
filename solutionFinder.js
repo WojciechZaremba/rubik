@@ -28,9 +28,10 @@ class SolutionFinder {
                 13: "....oo....wwwww.wwr..rr.r......y........b..bb.gg.g....",
                 14: "....oo..o.wwwwwwwwr..rr.r......y........b..bbggg.g....",
                 15: "..o.oo..owwwwwwwwwr..rr.r......y........b.bbbggg.g....", // complete white wall
-                16: "5.o.oo8.owwwwwwwwwr.6rr.r.76.5.y.7.85.6.b.bbbggg.g.8.7", // yellow corners trick: 5 - oby , 6 - bry, 7 - rgy, 8 - goy  
-                17: "o.o.ooo.owwwwwwwwwr.rrr.r.ry.y.y.y.yb.b.b.bbbggg.g.g.g", // yellow corners
-                18: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg",
+                // 16: "5.o.oo..owwwwwwwwwr..rr.r....5.y....5...b.bbbggg.g....", // yellow corners trick: 5 - oby , 6 - bry, 7 - rgy, 8 - goy  
+                16: "5.o.oo8.owwwwwwwwwr.6rr.r.76.5.y.7.85.6.b.bbbggg.g.8.7", // all yellow corners trick: 5 - oby , 6 - bry, 7 - rgy, 8 - goy  
+                17: "o.o.ooo.owwwwwwwwwr.rrr.r.ry.y.y.y.yb.b.b.bbbggg.g.g.g", // yellow corners done
+                18: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg", // the end
             },
             // algorithmSteps: {
             //     0:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",
@@ -74,6 +75,7 @@ class SolutionFinder {
     }
 
     scrambleAgain() {
+        this.currentPatternIdx = 0
         this.cubeToSolve.instaSolve()
         this.cubeToSolve.scramble()
         this.stateToSolve = this.cubeToSolve.state
@@ -181,7 +183,7 @@ class SolutionFinder {
     }
 
     search() {
-        if (this.currentPatternIdx === 12){
+        if (this.currentPatternIdx === 12) {
             console.log("%ccorners spin sequence", "color: magenta")
             
             console.log("a sequence should work here")
@@ -392,50 +394,50 @@ class SolutionFinder {
                 }
             } else if (this.currentPatternIdx >= 12  && this.currentPatternIdx <= 15) {
                 for (let i = 0; i < 4; i++) {
-                    let sequenceLeft = null
-                    let sequenceRight = null
-                    const sequenceBottom = faceNorth // yellow
+                    let relativeLeft = null
+                    let relativeRight = null
+                    const relativeBottom = faceNorth // yellow
                     switch (i) {
                         case 0:
-                            sequenceRight = faceBottom // green
-                            sequenceLeft = faceWest // orange
+                            relativeRight = faceBottom // green
+                            relativeLeft = faceWest // orange
                         break
                         case 1:
-                            sequenceRight = faceEast // red
-                            sequenceLeft = faceBottom // green
+                            relativeRight = faceEast // red
+                            relativeLeft = faceBottom // green
                         break
                         case 2:
-                            sequenceRight = faceTop  // blue
-                            sequenceLeft = faceEast // red
+                            relativeRight = faceTop  // blue
+                            relativeLeft = faceEast // red
                         break
                         case 3:
-                            sequenceRight = faceWest // orange
-                            sequenceLeft = faceTop // blue
+                            relativeRight = faceWest // orange
+                            relativeLeft = faceTop // blue
                         break
                     }
 
                     let state = queue[0].state
 
-                    let stateRCS = rotor(sequenceRight, state, indexes3x3, false)
-                        stateRCS = rotor(sequenceBottom, stateRCS, indexes3x3, true)
-                        stateRCS = rotor(sequenceRight, stateRCS, indexes3x3, true)
-                        stateRCS = rotor(sequenceBottom, stateRCS, indexes3x3, false)
-                        stateRCS = rotor(sequenceRight, stateRCS, indexes3x3, false)
-                        stateRCS = rotor(sequenceBottom, stateRCS, indexes3x3, true)
-                        stateRCS = rotor(sequenceRight, stateRCS, indexes3x3, true)
+                    let stateSpinR = rotor(relativeRight, state, indexes3x3, false)
+                        stateSpinR = rotor(relativeBottom, stateSpinR, indexes3x3, true)
+                        stateSpinR = rotor(relativeRight, stateSpinR, indexes3x3, true)
+                        stateSpinR = rotor(relativeBottom, stateSpinR, indexes3x3, false)
+                        stateSpinR = rotor(relativeRight, stateSpinR, indexes3x3, false)
+                        stateSpinR = rotor(relativeBottom, stateSpinR, indexes3x3, true)
+                        stateSpinR = rotor(relativeRight, stateSpinR, indexes3x3, true)
 
-                    let stateTurnLeft = rotor(sequenceLeft, state, indexes3x3, true)
-                        stateTurnLeft = rotor(sequenceBottom, stateTurnLeft, indexes3x3, false)
-                        stateTurnLeft = rotor(sequenceLeft, stateTurnLeft, indexes3x3, false)
-                        stateTurnLeft = rotor(sequenceBottom, stateTurnLeft, indexes3x3, true)
-                        stateTurnLeft = rotor(sequenceLeft, stateTurnLeft, indexes3x3, true)
-                        stateTurnLeft = rotor(sequenceBottom, stateTurnLeft, indexes3x3, false)
-                        stateTurnLeft = rotor(sequenceLeft, stateTurnLeft, indexes3x3, false)
+                    let stateSpinL = rotor(relativeLeft, state, indexes3x3, true)
+                        stateSpinL = rotor(relativeBottom, stateSpinL, indexes3x3, false)
+                        stateSpinL = rotor(relativeLeft, stateSpinL, indexes3x3, false)
+                        stateSpinL = rotor(relativeBottom, stateSpinL, indexes3x3, true)
+                        stateSpinL = rotor(relativeLeft, stateSpinL, indexes3x3, true)
+                        stateSpinL = rotor(relativeBottom, stateSpinL, indexes3x3, false)
+                        stateSpinL = rotor(relativeLeft, stateSpinL, indexes3x3, false)
 
                     const nodeRight = {
                         depth: parentNode.depth + 1,
                         id: undefined,
-                        state: stateRCS  ,
+                        state: stateSpinR  ,
                         prevMove: {
                             face: null,
                             direction: true,
@@ -450,7 +452,7 @@ class SolutionFinder {
                     const nodeLeft = {
                         depth: parentNode.depth + 1,
                         id: undefined,
-                        state: stateTurnLeft,
+                        state: stateSpinL,
                         prevMove: {
                             face: null,
                             direction: false,
@@ -461,6 +463,9 @@ class SolutionFinder {
                         parent: parentNode,
                         children: []
                     }
+
+                    parentNode.children.push(nodeRight, nodeLeft)
+                    queue.push(nodeRight, nodeLeft)
 
                     if (boundCheckIfSolvedNew(parentNode.state)) {
                         boundSolutionHandler(parentNode)
@@ -473,8 +478,261 @@ class SolutionFinder {
                         break 
                     }
                 }
-            } else if (this.currentPatternIdx > 15) {
+            } else if (this.currentPatternIdx === 16) {
+                console.log("still going...")
+                for (let i = 0; i < 4; i++) {
+                    let relativeLeft = null
+                    let relativeRight = null
+                    const relativeBottom = faceNorth // yellow
+                    switch (i) {
+                        case 0:
+                            relativeRight = faceBottom // green
+                            relativeLeft = faceWest // orange
+                        break
+                        case 1:
+                            relativeRight = faceEast // red
+                            relativeLeft = faceBottom // green
+                        break
+                        case 2:
+                            relativeRight = faceTop  // blue
+                            relativeLeft = faceEast // red
+                        break
+                        case 3:
+                            relativeRight = faceWest // orange
+                            relativeLeft = faceTop // blue
+                        break
+                    }
+    
+                    let state = queue[0].state
+    
+                    let magicSevenR = rotor(relativeRight, state, indexes3x3, false)
+                        magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeRight, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, false)
+                        magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, false)
+    
+                    let magicSevenL = rotor(relativeLeft, state, indexes3x3, true)
+                        magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeLeft, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, true)
+                        magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, true)
+                    
+                    let bottomRight = rotor(relativeBottom, state, indexes3x3, true)
+                    let bottomLeft = rotor(relativeBottom, state, indexes3x3, false)
 
+                    const nodeMagicRight = {
+                        depth: parentNode.depth + 1,
+                        id: undefined,
+                        state: magicSevenR  ,
+                        prevMove: {
+                            face: null,
+                            direction: true,
+                            double: false,
+                            cornerSpin: false,
+                            magicSeven: true,
+                            cornerNum: i,
+                        },  
+                        parent: parentNode,
+                        children: []
+                    }
+                    const nodeMagicLeft = {
+                        depth: parentNode.depth + 1,
+                        id: undefined,
+                        state: magicSevenL,
+                        prevMove: {
+                            face: null, 
+                            direction: false,
+                            double: false,
+                            cornerSpin: false,
+                            magicSeven: true,
+                            cornerNum: i,
+                        },
+                        parent: parentNode,
+                        children: []
+                    }
+                    const nodeBottomLeft = {
+                        depth: parentNode.depth + 1,
+                        id: undefined,
+                        state: bottomLeft,
+                        prevMove: {
+                            face: null, 
+                            direction: false,
+                            double: false,
+                            cornerSpin: false,
+                        },
+                        parent: parentNode,
+                        children: []
+                    }
+                    const nodeBottomRight = {
+                        depth: parentNode.depth + 1,
+                        id: undefined,
+                        state: bottomRight,
+                        prevMove: {
+                            face: null, 
+                            direction: true,
+                            double: false,
+                            cornerSpin: false,
+                        },
+                        parent: parentNode,
+                        children: []
+                    }
+
+                    parentNode.children.push(nodeMagicLeft, nodeMagicRight, nodeBottomRight, nodeBottomLeft)
+                    queue.push(nodeMagicLeft, nodeMagicRight, nodeBottomRight, nodeBottomLeft)
+    
+                    if (boundCheckIfSolvedNew(parentNode.state)) {
+                        console.log("parent")
+                        boundSolutionHandler(parentNode)
+                        break
+                    } else if (boundCheckIfSolvedNew(nodeMagicLeft.state)) {
+                        console.log("magic left")
+                        boundSolutionHandler(nodeMagicLeft)
+                        break
+                    } else if (boundCheckIfSolvedNew(nodeMagicRight.state)) {
+                        console.log("magic right")
+                        boundSolutionHandler(nodeMagicRight)
+                        break 
+                    } else if (boundCheckIfSolvedNew(nodeBottomRight.state)) {
+                        console.log("bottom right")
+                        boundSolutionHandler(nodeBottomRight)
+                        break 
+                    } else if (boundCheckIfSolvedNew(nodeBottomLeft.state)) {
+                        console.log("bottom left")
+                        boundSolutionHandler(nodeBottomLeft)
+                        break 
+                    }
+                }
+            } else if (this.currentPatternIdx === 17) {
+                for (let i = 0; i < 4; i++) {
+                    let relativeLeft = null
+                    let relativeRight = null
+                    const relativeBottom = faceNorth // yellow
+                    switch (i) {
+                        case 0:
+                            relativeRight = faceBottom // green
+                            relativeLeft = faceWest // orange
+                        break
+                        case 1:
+                            relativeRight = faceEast // red
+                            relativeLeft = faceBottom // green
+                        break
+                        case 2:
+                            relativeRight = faceTop  // blue
+                            relativeLeft = faceEast // red
+                        break
+                        case 3:
+                            relativeRight = faceWest // orange
+                            relativeLeft = faceTop // blue
+                        break
+                    }
+
+                    let state = queue[0].state
+                    
+                    let magicSevenR = rotor(relativeRight, state, indexes3x3, false)
+                        magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeRight, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, false)
+                        magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, false);
+                        magicSevenR = rotor(relativeRight, state, indexes3x3, false)
+                        magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeRight, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, false)
+                        magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, false);
+                        magicSevenR = rotor(relativeRight, state, indexes3x3, false)
+                        magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeRight, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, false)
+                        magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, false);
+                        magicSevenR = rotor(relativeRight, state, indexes3x3, false)
+                        magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeRight, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, true)
+                        magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, false)
+                        magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, false);
+
+                    let magicSevenL = rotor(relativeLeft, state, indexes3x3, true)
+                        magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeLeft, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, true)
+                        magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, true);
+                        magicSevenL = rotor(relativeLeft, state, indexes3x3, true)
+                        magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeLeft, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, true)
+                        magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, true);
+                        magicSevenL = rotor(relativeLeft, state, indexes3x3, true)
+                        magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeLeft, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, true)
+                        magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, true);
+                        magicSevenL = rotor(relativeLeft, state, indexes3x3, true)
+                        magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeLeft, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, false)
+                        magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, true)
+                        magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, true);
+
+                    const nodeRight = {
+                        depth: parentNode.depth + 1,
+                        id: undefined,
+                        state: magicSevenR  ,
+                        prevMove: {
+                            face: null,
+                            direction: true,
+                            double: false,
+                            magic47: true,
+                            cornerNum: i,
+                        },  
+                        parent: parentNode,
+                        children: []
+                    }
+                    const nodeLeft = {
+                        depth: parentNode.depth + 1,
+                        id: undefined,
+                        state: magicSevenL,
+                        prevMove: {
+                            face: null,
+                            direction: false,
+                            double: false,
+                            magic47: true,
+                            cornerNum: i,
+                        },
+                        parent: parentNode,
+                        children: []
+                    }
+
+                    parentNode.children.push(nodeLeft, nodeRight)
+                    queue.push(nodeLeft, nodeRight)
+
+                    if (boundCheckIfSolvedNew(parentNode.state)) {
+                        boundSolutionHandler(parentNode)
+                        break
+                    } else if (boundCheckIfSolvedNew(nodeLeft.state)) {
+                        boundSolutionHandler(nodeLeft)
+                        break
+                    } else if (boundCheckIfSolvedNew(nodeRight.state)) {
+                        boundSolutionHandler(nodeRight)
+                        break 
+                    }
+                }
             }
 
             

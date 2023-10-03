@@ -1,6 +1,35 @@
 console.log("debug loaded")
 
-function debug(cubeState) {
+function debug(_cubeState, checkV = false, checkTeeth = false) {
+    let cubeState = _cubeState
+    if (checkV) {
+        const t = cubeState.split("")
+        t[1] = "?"
+        t[39] = "?"
+        t[41] = "#"
+        t[19] = "#"
+        t[25] = "@"
+        t[50] = "@"
+        t[48] = "$"
+        t[7] = "$"
+        cubeState = t.join("")
+        // const t = cubeState.split("")
+        // [t[1],t[41],t[43],t[20],
+        //  t[25],t[50],t[48],t[7]] = ["?","?","?","?","?","?","?","?"]
+        //  cubeState = t
+    }
+    if (checkTeeth) {
+        const t = cubeState.split("")
+        t[37] = "?"
+        t[28] = "?"
+        t[23] = "#"
+        t[30] = "#"
+        t[52] = "@"
+        t[34] = "@"
+        t[3] = "$"
+        t[32] = "$"
+        cubeState = t.join("")
+    }
     const logsParts      = ["", "", ""] // = ["TOP","SIDES","BOTTOM"]
     const logsStyles = [[], [], []]
 
@@ -24,7 +53,7 @@ function debug(cubeState) {
     for (let l = 0; l < logsParts.length; l++) {
         let temp = logsParts[l].split("") // should it work with just a string?
         for (let i = 0; i < temp.length; i++) {
-            if (temp[i].match(/[owrybgX.12345678]/)) { // avoid escape characters so you don't syle them
+            if (temp[i].match(/[owrybgXV.12345678?#@$*]/)) { // avoid escape characters so you don't syle them
                 switch (temp[i]) {
                     case "o":
                         logsStyles[l].push("color: orange")
@@ -48,32 +77,30 @@ function debug(cubeState) {
                         logsStyles[l].push("color: black")
                     break
                     case "1":
-                        logsStyles[l].push("color: magenta")
-                    break
                     case "2":
-                        logsStyles[l].push("color: magenta")
-                    break
                     case "3":
-                        logsStyles[l].push("color: magenta")
-                    break
                     case "4":
-                        logsStyles[l].push("color: magenta")
-                    break
                     case "5":
-                        logsStyles[l].push("color: magenta")
-                    break
                     case "6":
-                        logsStyles[l].push("color: magenta")
-                    break
                     case "7":
-                        logsStyles[l].push("color: magenta")
+                    case "8":    
+                    logsStyles[l].push("color: magenta")
                     break
-                    case "8":
-                        logsStyles[l].push("color: magenta")
+                    case "*":    
+                        logsStyles[l].push("color: lime")
+                    break
+                    case "V":
+                        logsStyles[l].push("color: gray")
                     break
                     case ".":
                         logsStyles[l].push("color: grey")
-                        break
+                    break
+                    case "?":
+                    case "#":
+                    case "@":
+                    case "$":
+                        logsStyles[l].push("color: chartreuse")
+                    break
                 }
                 temp[i] = " %c" + temp[i]
                 
@@ -86,5 +113,6 @@ function debug(cubeState) {
     // console.log(logsParts)
     // console.log(logsReady)
     // console.log(logsStyles)
+    // console.log("test")
     console.log(logsReady, ...logsStyles.flat())
 }

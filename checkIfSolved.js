@@ -33,13 +33,37 @@ function checkIfSolvedNew(state) {
     const pattern = this.patterns.algorithmSteps[idx]
     // const pattern = this.patterns.tests.stressTest
     for (let i = 0; i < state.length; i++) {
-        if (pattern[i] !== "." && pattern[i] !== "X" && !pattern[i].match(/[12345678]/) && state[i] !== pattern[i]) {
+        if (pattern[i] !== "." && !pattern[i].match(/[12345678VX*]/) && state[i] !== pattern[i]) {
             result = false
             break
         }
         if (pattern[i] === "X" && state[i] === "w") {
             result = false
             break
+        }
+        if (pattern[i] === "V" && state[i].match(/[brgo]/)) {
+            if (i === 1 && state[39].match(/[brgo]/) ||
+                i === 39 && state[1].match(/[brgo]/) || 
+                i === 41 && state[19].match(/[brgo]/) || 
+                i === 19 && state[41].match(/[brgo]/) || 
+                i === 25 && state[50].match(/[brgo]/) || 
+                i === 50 && state[25].match(/[brgo]/) || 
+                i === 48 && state[7].match(/[brgo]/) || 
+                i === 7 && state[48].match(/[brgo]/)
+            ){
+                result = false
+                break
+            } 
+        }
+        if (pattern[i] === "*") {
+            if (state[i].match(/[bg]/) && (i !== 37 || i !== 30 || i !== 52 || i !== 32)) {
+                result = false
+                break
+            }
+            if (state[i].match(/[or]/) && (i !== 3 || i !== 23 || i !== 28 || i !== 34)) {
+                result = false
+                break
+            }
         }
         if (pattern[i] == "1" && !state[i].match(/[wbo]/)) {
             result = false

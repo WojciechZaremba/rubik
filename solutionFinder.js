@@ -416,55 +416,12 @@ class SolutionFinder {
                 // } 
                 }
             } else if (this.currentPatternIdx >= 12  && this.currentPatternIdx <= 15) {
-                for (let i = 0; i < 4; i++) {
-                    // let relativeLeft = null
-                    // let relativeRight = null
-
-                    // const relativesLeftArr = [faceWest, faceBottom, faceEast, faceTop]
-                    // const relativesRightArr = [faceBottom, faceEast, faceTop, faceWest]
-                    
+                for (let i = 0; i < 4; i++) {                    
                     const relativeLeft = relativesLeftArr[i]
                     const relativeRight = relativesRightArr[i]
                     const relativeBottom = faceNorth // yellow
 
-                    // switch (i) {
-                    //     case 0:
-                    //         relativeRight = faceBottom // green
-                    //         relativeLeft = faceWest // orange
-                    //     break
-                    //     case 1:
-                    //         relativeRight = faceEast // red
-                    //         relativeLeft = faceBottom // green
-                    //     break
-                    //     case 2:
-                    //         relativeRight = faceTop  // blue
-                    //         relativeLeft = faceEast // red
-                    //     break
-                    //     case 3:
-                    //         relativeRight = faceWest // orange
-                    //         relativeLeft = faceTop // blue
-                    //     break
-                    // }
-
                     let state = queue[0].state
-
-                    // let stateSpinR = rotor(relativeRight, state, indexes3x3, false)
-                    //     stateSpinR = rotor(relativeBottom, stateSpinR, indexes3x3, true)
-                    //     stateSpinR = rotor(relativeRight, stateSpinR, indexes3x3, true)
-                    //     stateSpinR = rotor(relativeBottom, stateSpinR, indexes3x3, false)
-                    //     stateSpinR = rotor(relativeRight, stateSpinR, indexes3x3, false)
-                    //     stateSpinR = rotor(relativeBottom, stateSpinR, indexes3x3, true)
-                    //     stateSpinR = rotor(relativeRight, stateSpinR, indexes3x3, true)
-
-                    // let stateSpinL = rotor(relativeLeft, state, indexes3x3, true)
-                    //     stateSpinL = rotor(relativeBottom, stateSpinL, indexes3x3, false)
-                    //     stateSpinL = rotor(relativeLeft, stateSpinL, indexes3x3, false)
-                    //     stateSpinL = rotor(relativeBottom, stateSpinL, indexes3x3, true)
-                    //     stateSpinL = rotor(relativeLeft, stateSpinL, indexes3x3, true)
-                    //     stateSpinL = rotor(relativeBottom, stateSpinL, indexes3x3, false)
-                    //     stateSpinL = rotor(relativeLeft, stateSpinL, indexes3x3, false)
-
-
                     let stateSpinR = spinRight(relativeRight, relativeBottom, state)
                     let stateSpinL = spinLeft(relativeLeft, relativeBottom, state)
 
@@ -515,56 +472,13 @@ class SolutionFinder {
             } else if (this.currentPatternIdx === 16) {
                 console.log("still going...")
                 for (let i = 0; i < 4; i++) {
-                    // let relativeLeft = null
-                    // let relativeRight = null
-
-                    // const relativesLeftArr = [faceWest, faceBottom, faceEast, faceTop]
-                    // const relativesRightArr = [faceBottom, faceEast, faceTop, faceWest]
-                    
                     const relativeLeft = relativesLeftArr[i]
                     const relativeRight = relativesRightArr[i]
                     const relativeBottom = faceNorth // yellow
 
-                    // switch (i) {
-                    //     case 0:
-                    //         relativeRight = faceBottom // green
-                    //         relativeLeft = faceWest // orange
-                    //     break
-                    //     case 1:
-                    //         relativeRight = faceEast // red
-                    //         relativeLeft = faceBottom // green
-                    //     break
-                    //     case 2:
-                    //         relativeRight = faceTop  // blue
-                    //         relativeLeft = faceEast // red
-                    //     break
-                    //     case 3:
-                    //         relativeRight = faceWest // orange
-                    //         relativeLeft = faceTop // blue
-                    //     break
-                    // }
-    
                     let state = queue[0].state
-    
-                    // let magicSevenR = rotor(relativeRight, state, indexes3x3, false)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeRight, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, false)
-                    //     magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, false)
-    
-                    // let magicSevenL = rotor(relativeLeft, state, indexes3x3, true)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeLeft, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, true)
-                    //     magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, true)
-
                     let magicSevenR = magicSevenRight(state, relativeRight, relativeBottom, relativeLeft)
                     let magicSevenL = magicSevenLeft(state, relativeRight, relativeBottom, relativeLeft)
-                    
                     let bottomRight = rotor(relativeBottom, state, indexes3x3, true)
                     let bottomLeft = rotor(relativeBottom, state, indexes3x3, false)
 
@@ -652,72 +566,15 @@ class SolutionFinder {
                 }
             } else if (this.currentPatternIdx >= 17 && this.currentPatternIdx <= 24) {
                 for (let i = 0; i < 4; i++) {
-                    // let relativeLeft = null
-                    // let relativeRight = null
-
-                    // const relativesLeftArr = [faceWest, faceBottom, faceEast, faceTop]
-                    // const relativesRightArr = [faceBottom, faceEast, faceTop, faceWest]
-                    
                     const relativeLeft = relativesLeftArr[i]
                     const relativeRight = relativesRightArr[i]
                     const relativeBottom = faceNorth // yellow
 
-                    // switch (i) {
-                    //     case 0:
-                    //         relativeRight = faceBottom // green
-                    //         relativeLeft = faceWest // orange
-                    //     break
-                    //     case 1:
-                    //         relativeRight = faceEast // red
-                    //         relativeLeft = faceBottom // green
-                    //     break
-                    //     case 2:
-                    //         relativeRight = faceTop  // blue
-                    //         relativeLeft = faceEast // red
-                    //     break
-                    //     case 3:
-                    //         relativeRight = faceWest // orange
-                    //         relativeLeft = faceTop // blue
-                    //     break
-                    // }
-
                     let state = queue[0].state
-                    
-                    // let magicSevenR = rotor(relativeRight, state, indexes3x3, false)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeRight, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, false)
-                    //     magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, false);
-                    //     magicSevenR = rotor(relativeRight, magicSevenR, indexes3x3, false)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeRight, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, false)
-                    //     magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, false);
-
-                    // let magicSevenL = rotor(relativeLeft, state, indexes3x3, true)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeLeft, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, true)
-                    //     magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, true);
-                    //     magicSevenL = rotor(relativeLeft, magicSevenL, indexes3x3, true)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeLeft, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, true)
-                    //     magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, true);
-
                     let magicSevenR = magicSevenRight(state, relativeRight, relativeBottom, relativeLeft)
                         magicSevenR = magicSevenRight(magicSevenR, relativeRight, relativeBottom, relativeLeft)
                     let magicSevenL = magicSevenLeft(state, relativeRight, relativeBottom, relativeLeft)
                         magicSevenL = magicSevenLeft(magicSevenL, relativeRight, relativeBottom, relativeLeft)
-
                     let bottomRight = rotor(relativeBottom, state, indexes3x3, true)
                     let bottomLeft = rotor(relativeBottom, state, indexes3x3, false)
 
@@ -846,95 +703,11 @@ class SolutionFinder {
 
             } else if (this.currentPatternIdx === 27) { // yellow corners doer
                 for (let i = 0; i < 4; i++) {
-                    // let relativeLeft = null
-                    // let relativeRight = null
-
-                    // const relativesLeftArr = [faceWest, faceBottom, faceEast, faceTop]
-                    // const relativesRightArr = [faceBottom, faceEast, faceTop, faceWest]
-                    
                     const relativeLeft = relativesLeftArr[i]
                     const relativeRight = relativesRightArr[i]
                     const relativeBottom = faceNorth // yellow
 
-                    // switch (i) {
-                    //     case 0:
-                    //         relativeRight = faceBottom // green
-                    //         relativeLeft = faceWest // orange
-                    //     break
-                    //     case 1:
-                    //         relativeRight = faceEast // red
-                    //         relativeLeft = faceBottom // green
-                    //     break
-                    //     case 2:
-                    //         relativeRight = faceTop  // blue
-                    //         relativeLeft = faceEast // red
-                    //     break
-                    //     case 3:
-                    //         relativeRight = faceWest // orange
-                    //         relativeLeft = faceTop // blue
-                    //     break
-                    // }
-
                     let state = queue[0].state
-                    
-                    // let magicSevenR = rotor(relativeRight, state, indexes3x3, false)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeRight, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, false)
-                    //     magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, false);
-                    //     magicSevenR = rotor(relativeRight, magicSevenR, indexes3x3, false)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeRight, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, false)
-                    //     magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, false);
-                    //     magicSevenR = rotor(relativeRight, magicSevenR, indexes3x3, false)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeRight, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, false)
-                    //     magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, false);
-                    //     magicSevenR = rotor(relativeRight, magicSevenR, indexes3x3, false)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeRight, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, true)
-                    //     magicSevenR = rotor(relativeBottom, magicSevenR, indexes3x3, false)
-                    //     magicSevenR = rotor(relativeLeft, magicSevenR, indexes3x3, false);
-
-                    // let magicSevenL = rotor(relativeLeft, state, indexes3x3, true)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeLeft, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, true)
-                    //     magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, true);
-                    //     magicSevenL = rotor(relativeLeft, magicSevenL, indexes3x3, true)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeLeft, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, true)
-                    //     magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, true);
-                    //     magicSevenL = rotor(relativeLeft, magicSevenL, indexes3x3, true)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeLeft, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, true)
-                    //     magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, true);
-                    //     magicSevenL = rotor(relativeLeft, magicSevenL, indexes3x3, true)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeLeft, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, false)
-                    //     magicSevenL = rotor(relativeBottom, magicSevenL, indexes3x3, true)
-                    //     magicSevenL = rotor(relativeRight, magicSevenL, indexes3x3, true);
-
                     let magicSevenR = magicSevenRight(state, relativeRight, relativeBottom, relativeLeft)
                         magicSevenR = magicSevenRight(magicSevenR, relativeRight, relativeBottom, relativeLeft)
                         magicSevenR = magicSevenRight(magicSevenR, relativeRight, relativeBottom, relativeLeft)

@@ -1,5 +1,15 @@
 function node(_state, _parentNode, _prevMove) {
-    const prev = {}
+    // const prev = {
+    //             face: undefined,
+    //             direction: undefined,
+    //             double: undefined,
+    //             cornerSpin: undefined,
+    //             magicSeven: undefined,
+    //             magic27: undefined,
+    //             magic47: undefined,
+    //             cornerNum: undefined,
+    //         }
+    // Object.assign(prev, _prevMove)
     return {
             depth: _parentNode.depth + 1,
             id: undefined,

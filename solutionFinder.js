@@ -46,22 +46,6 @@ class SolutionFinder {
                 // 98: "o?ooooo$owwwwwwwwwr#rrrrr@ryyyyyyyyybbb?b#bbbggg$g@ggg", // mid remover
                 30: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg", // the end
             },
-            // algorithmSteps: {
-            //     0:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",
-            //     1:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",
-            //     2:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",
-            //     3:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg", // white cross
-            //     4:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg", 
-            //     5:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg", 
-            //     6:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg", 
-            //     7:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg", // remove any white pieces from X
-            //     8:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",
-            //     9:  "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",
-            //     10: "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",
-            //     11: "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg", // complete white wall
-            //     12: "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",// yellow corners
-            //     13: "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg"
-            // },
             tests: {
                 midRemover: "o?ooooo$owwwwwwwwwr#rrrrr@ryyyyyyyyybbb?b#bbbggg$g@ggg", // mid remover
                 stressTest: "this will not be found rrrryyyyyyyyybbbbbbbbbggggggggg",
@@ -288,7 +272,6 @@ class SolutionFinder {
 
                 const nodeRight = node(stateTurnRight, parentNode, {face: face, direction: true})
                 const nodeLeft = node(stateTurnLeft, parentNode, {face: face, direction: false})
-                
 
                 // const node180 = {
                 //     depth: parentNode.depth + 1,
@@ -365,7 +348,6 @@ class SolutionFinder {
 
                 // boundCheckIfSolvedNew(nodeLeft.state)
 
-
                 if (boundCheckIfSolvedNew(parentNode.state)) {
                     boundSolutionHandler(parentNode)
                     break
@@ -379,18 +361,7 @@ class SolutionFinder {
                 // else if (boundCheckIfSolvedNew(node180.state)) {
                 //     boundSolutionHandler(node180)
                 //     break
-                // } 
-                
-                // if (boundCheckIfSolved(nodeLeft.state, patternsArr)) {
-                //     boundSolutionHandler(nodeLeft)
-                //     break
-                // } else if (boundCheckIfSolved(nodeRight.state, patternsArr)) {
-                //     boundSolutionHandler(nodeRight)
-                //     break 
-                // } else if (boundCheckIfSolved(node180.state, patternsArr)) {
-                //     boundSolutionHandler(node180)
-                //     break
-                // } 
+                // }
                 }
             } else if (this.currentPatternIdx >= 12  && this.currentPatternIdx <= 15) {
                 for (let i = 0; i < 4; i++) {                    
@@ -527,7 +498,11 @@ class SolutionFinder {
                 }
             } else if (this.currentPatternIdx === 26) {
 
-            } else if (this.currentPatternIdx === 27) { // yellow corners doer
+            } else if (this.currentPatternIdx === 27) {
+                console.log("empty")
+                break
+            } else if (this.currentPatternIdx === 28) { // yellow corners doer
+                console.log("here")
                 for (let i = 0; i < 4; i++) {
                     const relativeLeft = relativesLeftArr[i]
                     const relativeRight = relativesRightArr[i]

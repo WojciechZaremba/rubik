@@ -286,31 +286,33 @@ class SolutionFinder {
                 
                 //let stateTurn180 = rotor(face, state, indexes3x3, boolRight, true)
 
-                const nodeRight = {
-                    depth: parentNode.depth + 1,
-                    id: undefined,
-                    state: stateTurnRight,
-                    prevMove: {
-                        face: face,
-                        direction: boolRight,
-                        double: false
-                    },
-                    parent: parentNode,
-                    children: []
-                }
-
-                const nodeLeft = {
-                    depth: parentNode.depth + 1,
-                    id: undefined,
-                    state: stateTurnLeft,
-                    prevMove: {
-                        face: face,
-                        direction: boolLeft,
-                        double: false
-                    },
-                    parent: parentNode,
-                    children: []
-                }
+                // const nodeRight = {
+                //     depth: parentNode.depth + 1,
+                //     id: undefined,
+                //     state: stateTurnRight,
+                //     prevMove: {
+                //         face: face,
+                //         direction: boolRight,
+                //         double: false
+                //     },
+                //     parent: parentNode,
+                //     children: []
+                // }
+                const nodeRight = node(stateTurnRight, parentNode, {face: face, direction: true})
+                
+                // const nodeLeft = {
+                //     depth: parentNode.depth + 1,
+                //     id: undefined,
+                //     state: stateTurnLeft,
+                //     prevMove: {
+                //         face: face,
+                //         direction: boolLeft,
+                //         double: false
+                //     },
+                //     parent: parentNode,
+                //     children: []
+                // }
+                const nodeLeft = node(stateTurnLeft, parentNode, {face: face, direction: false})
                 
 
                 // const node180 = {
@@ -425,36 +427,38 @@ class SolutionFinder {
                     let stateSpinR = spinRight(relativeRight, relativeBottom, state)
                     let stateSpinL = spinLeft(relativeLeft, relativeBottom, state)
 
-                    const nodeRight = {
-                        depth: parentNode.depth + 1,
-                        id: undefined,
-                        state: stateSpinR  ,
-                        prevMove: {
-                            face: null,
-                            direction: true,
-                            double: false,
-                            cornerSpin: true,
-                            cornerNum: i,
-                        },  
-                        parent: parentNode,
-                        children: []
-                    }
-
-                    const nodeLeft = {
-                        depth: parentNode.depth + 1,
-                        id: undefined,
-                        state: stateSpinL,
-                        prevMove: {
-                            face: null,
-                            direction: false,
-                            double: false,
-                            cornerSpin: true,
-                            cornerNum: i,
-                        },
-                        parent: parentNode,
-                        children: []
-                    }
-
+                    // const nodeRight = {
+                    //     depth: parentNode.depth + 1,
+                    //     id: undefined,
+                    //     state: stateSpinR,
+                    //     prevMove: {
+                    //         face: null,
+                    //         direction: true,
+                    //         double: false,
+                    //         cornerSpin: true,
+                    //         cornerNum: i,
+                    //     },  
+                    //     parent: parentNode,
+                    //     children: []
+                    // }
+                    const nodeRight = node(stateSpinR, parentNode, {direction: true, cornerSpin: true, cornerNum: i})
+                    
+                    // const nodeLeft = {
+                    //     depth: parentNode.depth + 1,
+                    //     id: undefined,
+                    //     state: stateSpinL,
+                    //     prevMove: {
+                    //         face: null,
+                    //         direction: false,
+                    //         double: false,
+                    //         cornerSpin: true,
+                    //         cornerNum: i,
+                    //     },
+                    //     parent: parentNode,
+                    //     children: []
+                    // }
+                    const nodeLeft = node(stateSpinL, parentNode, {direction: false, cornerSpin: true, cornerNum: i})
+                    
                     parentNode.children.push(nodeRight, nodeLeft)
                     queue.push(nodeRight, nodeLeft)
 
@@ -482,66 +486,70 @@ class SolutionFinder {
                     let bottomRight = rotor(relativeBottom, state, indexes3x3, true)
                     let bottomLeft = rotor(relativeBottom, state, indexes3x3, false)
 
-                    const nodeMagicRight = {
-                        depth: parentNode.depth + 1,
-                        id: undefined,
-                        state: magicSevenR  ,
-                        prevMove: {
-                            face: null,
-                            direction: true,
-                            double: false,
-                            cornerSpin: false,
-                            magicSeven: true,
-                            cornerNum: i,
-                        },  
-                        parent: parentNode,
-                        children: []
-                    }
-                    const nodeMagicLeft = {
-                        depth: parentNode.depth + 1,
-                        id: undefined,
-                        state: magicSevenL,
-                        prevMove: {
-                            face: null, 
-                            direction: false,
-                            double: false,
-                            cornerSpin: false,
-                            magicSeven: true,
-                            cornerNum: i,
-                        },
-                        parent: parentNode,
-                        children: []
-                    }
-                    const nodeBottomLeft = {
-                        depth: parentNode.depth + 1,
-                        id: undefined,
-                        state: bottomLeft,
-                        prevMove: {
-                            face: null, 
-                            direction: false,
-                            double: false,
-                            cornerSpin: false,
-                        },
-                        parent: parentNode,
-                        children: []
-                    }
-                    const nodeBottomRight = {
-                        depth: parentNode.depth + 1,
-                        id: undefined,
-                        state: bottomRight,
-                        prevMove: {
-                            face: null, 
-                            direction: true,
-                            double: false,
-                            cornerSpin: false,
-                        },
-                        parent: parentNode,
-                        children: []
-                    }
-
+                    // const nodeMagicRight = {
+                    //     depth: parentNode.depth + 1,
+                    //     id: undefined,
+                    //     state: magicSevenR  ,
+                    //     prevMove: {
+                    //         face: null,
+                    //         direction: true,
+                    //         double: false,
+                    //         cornerSpin: false,
+                    //         magicSeven: true,
+                    //         cornerNum: i,
+                    //     },  
+                    //     parent: parentNode,
+                    //     children: []
+                    // }
+                    const nodeMagicRight = node(magicSevenR, parentNode, {direction: true, magicSeven: true, cornerNum: i})
+                    // const nodeMagicLeft = {
+                    //     depth: parentNode.depth + 1,
+                    //     id: undefined,
+                    //     state: magicSevenL,
+                    //     prevMove: {
+                    //         face: null, 
+                    //         direction: false,
+                    //         double: false,
+                    //         cornerSpin: false,
+                    //         magicSeven: true,
+                    //         cornerNum: i,
+                    //     },
+                    //     parent: parentNode,
+                    //     children: []
+                    // }
+                    const nodeMagicLeft = node(magicSevenL, parentNode, {direction: false, magicSeven: true, cornerNum: i})
+                    // const nodeBottomLeft = {
+                    //     depth: parentNode.depth + 1,
+                    //     id: undefined,
+                    //     state: bottomLeft,
+                    //     prevMove: {
+                    //         face: null, 
+                    //         direction: false,
+                    //         double: false,
+                    //         cornerSpin: false,
+                    //     },
+                    //     parent: parentNode,
+                    //     children: []
+                    // }
+                    const nodeBottomLeft = node(bottomLeft, parentNode, {direction: false, face: null}) // TO DO: FIX FACE FOR COMMAND PATTERN
+                    // const nodeBottomRight = {
+                    //     depth: parentNode.depth + 1,
+                    //     id: undefined,
+                    //     state: bottomRight,
+                    //     prevMove: {
+                    //         face: null, 
+                    //         direction: true,
+                    //         double: false,
+                    //         cornerSpin: false,
+                    //     },
+                    //     parent: parentNode,
+                    //     children: []
+                    // }
+                    const nodeBottomRight = node(bottomRight, parentNode, {direction: true, face: null}) // TO DO: FIX FACE FOR COMMAND PATTERN
+                    
                     parentNode.children.push(nodeMagicLeft, nodeMagicRight, nodeBottomRight, nodeBottomLeft)
                     queue.push(nodeMagicLeft, nodeMagicRight, nodeBottomRight, nodeBottomLeft)
-    
+                    
                     if (boundCheckIfSolvedNew(parentNode.state)) {
                         console.log("parent")
                         boundSolutionHandler(parentNode)
@@ -569,7 +577,7 @@ class SolutionFinder {
                     const relativeLeft = relativesLeftArr[i]
                     const relativeRight = relativesRightArr[i]
                     const relativeBottom = faceNorth // yellow
-
+                    
                     let state = queue[0].state
                     let magicSevenR = magicSevenRight(state, relativeRight, relativeBottom, relativeLeft)
                         magicSevenR = magicSevenRight(magicSevenR, relativeRight, relativeBottom, relativeLeft)
@@ -578,61 +586,65 @@ class SolutionFinder {
                     let bottomRight = rotor(relativeBottom, state, indexes3x3, true)
                     let bottomLeft = rotor(relativeBottom, state, indexes3x3, false)
 
-                    const nodeRight = {
-                        depth: parentNode.depth + 1,
-                        id: undefined,
-                        state: magicSevenR  ,
-                        prevMove: {
-                            face: null, 
-                            direction: true,
-                            double: false,
-                            magic27: true,
-                            cornerNum: i,
-                        },  
-                        parent: parentNode,
-                        children: []
-                    }
-                    const nodeLeft = {
-                        depth: parentNode.depth + 1,
-                        id: undefined,
-                        state: magicSevenL,
-                        prevMove: {
-                            face: null,
-                            direction: false,
-                            double: false,
-                            magic27: true,
-                            cornerNum: i,
-                        },
-                        parent: parentNode,
-                        children: []
-                    }
-                    const nodeBottomLeft = {
-                        depth: parentNode.depth + 1,
-                        id: undefined,
-                        state: bottomLeft,
-                        prevMove: {
-                            face: null, 
-                            direction: false,
-                            double: false,
-                            cornerSpin: false,
-                        },
-                        parent: parentNode,
-                        children: []
-                    }
-                    const nodeBottomRight = {
-                        depth: parentNode.depth + 1,
-                        id: undefined,
-                        state: bottomRight,
-                        prevMove: {
-                            face: null, 
-                            direction: true,
-                            double: false,
-                            cornerSpin: false,
-                        },
-                        parent: parentNode,
-                        children: []
-                    }
-
+                    // const nodeRight = {
+                    //     depth: parentNode.depth + 1,
+                    //     id: undefined,
+                    //     state: magicSevenR  ,
+                    //     prevMove: {
+                    //         face: null, 
+                    //         direction: true,
+                    //         double: false,
+                    //         magic27: true,
+                    //         cornerNum: i,
+                    //     },  
+                    //     parent: parentNode,
+                    //     children: []
+                    // }
+                    const nodeRight = node(magicSevenR, parentNode, {direction: true, magic27: true, cornerNum: i})
+                    // const nodeLeft = {
+                    //     depth: parentNode.depth + 1,
+                    //     id: undefined,
+                    //     state: magicSevenL,
+                    //     prevMove: {
+                    //         face: null,
+                    //         direction: false,
+                    //         double: false,
+                    //         magic27: true,
+                    //         cornerNum: i,
+                    //     },
+                    //     parent: parentNode,
+                    //     children: []
+                    // }
+                    const nodeLeft = node(magicSevenL, parentNode, {direction: false, magic27: true, cornerNum: i})
+                    // const nodeBottomLeft = {
+                    //     depth: parentNode.depth + 1,
+                    //     id: undefined,
+                    //     state: bottomLeft,
+                    //     prevMove: {
+                    //         face: null, 
+                    //         direction: false,
+                    //         double: false,
+                    //         cornerSpin: false,
+                    //     },
+                    //     parent: parentNode,
+                    //     children: []
+                    // }
+                    const nodeBottomLeft = node(bottomLeft, parentNode, {direction: false, face: null}) // TO DO: FIX FACE FOR COMMAND PATTERN
+                    // const nodeBottomRight = {
+                    //     depth: parentNode.depth + 1,
+                    //     id: undefined,
+                    //     state: bottomRight,
+                    //     prevMove: {
+                    //         face: null, 
+                    //         direction: true,
+                    //         double: false,
+                    //         cornerSpin: false,
+                    //     },
+                    //     parent: parentNode,
+                    //     children: []
+                    // }
+                    const nodeBottomRight = node(bottomRight, parentNode, {direction: true, face: null}) // TO DO: FIX FACE FOR COMMAND PATTERN
+                    
                     parentNode.children.push(nodeLeft, nodeRight, nodeBottomLeft, nodeBottomRight)
                     queue.push(nodeLeft, nodeRight, nodeBottomLeft, nodeBottomRight)
 
@@ -660,35 +672,37 @@ class SolutionFinder {
                 let stateTurnRight = rotor(relativeBottom, state, indexes3x3, true)
                 let stateTurnLeft = rotor(relativeBottom, state, indexes3x3, false)
 
-                const nodeRight = {
-                    depth: parentNode.depth + 1,   
-                    id: undefined,
-                    state: stateTurnRight,
-                    prevMove: {
-                        face: relativeBottom,
-                        direction: true,
-                        double: false
-                    },
-                    parent: parentNode,
-                    children: []
-                }
-
-                const nodeLeft = {
-                    depth: parentNode.depth + 1,
-                    id: undefined,
-                    state: stateTurnLeft,
-                    prevMove: {
-                        face: relativeBottom,
-                        direction: false,
-                        double: false
-                    },
-                    parent: parentNode,
-                    children: []
-                }
-
+                // const nodeRight = {
+                //     depth: parentNode.depth + 1,   
+                //     id: undefined,
+                //     state: stateTurnRight,
+                //     prevMove: {
+                //         face: relativeBottom,
+                //         direction: true,
+                //         double: false
+                //     },
+                //     parent: parentNode,
+                //     children: []
+                // }
+                const nodeRight = node(stateTurnRight, parentNode, {direction: true, face: relativeBottom})
+                
+                // const nodeLeft = {
+                //     depth: parentNode.depth + 1,
+                //     id: undefined,
+                //     state: stateTurnLeft,
+                //     prevMove: {
+                //         face: relativeBottom,
+                //         direction: false,
+                //         double: false
+                //     },
+                //     parent: parentNode,
+                //     children: []
+                // }
+                const nodeLeft = node(stateTurnLeft, parentNode, {direction: false, face: relativeBottom})
+                
                 parentNode.children.push(nodeLeft, nodeRight)
                 queue.push(nodeLeft, nodeRight)
-
+                
                 if (boundCheckIfSolvedNew(parentNode.state)) {
                     boundSolutionHandler(parentNode)
                     break
@@ -717,34 +731,36 @@ class SolutionFinder {
                         magicSevenL = magicSevenLeft(magicSevenL, relativeRight, relativeBottom, relativeLeft)
                         magicSevenL = magicSevenLeft(magicSevenL, relativeRight, relativeBottom, relativeLeft)
 
-                    const nodeRight = {
-                        depth: parentNode.depth + 1,
-                        id: undefined,
-                        state: magicSevenR  ,
-                        prevMove: {
-                            face: null, 
-                            direction: true,
-                            double: false,
-                            magic47: true,
-                            cornerNum: i,
-                        },  
-                        parent: parentNode,
-                        children: []
-                    }
-                    const nodeLeft = {
-                        depth: parentNode.depth + 1,
-                        id: undefined,
-                        state: magicSevenL,
-                        prevMove: {
-                            face: null,
-                            direction: false,
-                            double: false,
-                            magic47: true,
-                            cornerNum: i,
-                        },
-                        parent: parentNode,
-                        children: []
-                    }
+                    // const nodeRight = {
+                    //     depth: parentNode.depth + 1,
+                    //     id: undefined,
+                    //     state: magicSevenR  ,
+                    //     prevMove: {
+                    //         face: null, 
+                    //         direction: true,
+                    //         double: false,
+                    //         magic47: true,
+                    //         cornerNum: i,
+                    //     },  
+                    //     parent: parentNode,
+                    //     children: []
+                    // }
+                    const nodeRight = node(magicSevenR, parentNode, {direction: true, magic47: true, cornerNum: i})
+                    // const nodeLeft = {
+                    //     depth: parentNode.depth + 1,
+                    //     id: undefined,
+                    //     state: magicSevenL,
+                    //     prevMove: {
+                    //         face: null,
+                    //         direction: false,
+                    //         double: false,
+                    //         magic47: true,
+                    //         cornerNum: i,
+                    //     },
+                    //     parent: parentNode,
+                    //     children: []
+                    // }
+                    const nodeLeft = node(magicSevenL, parentNode, {direction: false, magic47: true, cornerNum: i})
 
                     parentNode.children.push(nodeLeft, nodeRight)
                     queue.push(nodeLeft, nodeRight)
@@ -762,7 +778,6 @@ class SolutionFinder {
                 }
             } 
 
-            
             queue.shift()
         }
 

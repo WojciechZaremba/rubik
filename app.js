@@ -1,6 +1,5 @@
 console.log("app loaded")
 
-
 const cubeScrambled = new Cube()
 cubeScrambled.log()
 cubeScrambled.scramble()

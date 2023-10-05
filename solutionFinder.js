@@ -444,10 +444,13 @@ class SolutionFinder {
                     const relativeBottom = faceNorth // yellow
                     
                     let state = queue[0].state
+
                     let magicSevenR = magicSevenRight(state, relativeRight, relativeBottom, relativeLeft)
                         magicSevenR = magicSevenRight(magicSevenR, relativeRight, relativeBottom, relativeLeft)
+
                     let magicSevenL = magicSevenLeft(state, relativeRight, relativeBottom, relativeLeft)
                         magicSevenL = magicSevenLeft(magicSevenL, relativeRight, relativeBottom, relativeLeft)
+
                     let bottomRight = rotor(relativeBottom, state, indexes3x3, true)
                     let bottomLeft = rotor(relativeBottom, state, indexes3x3, false)
 
@@ -499,11 +502,11 @@ class SolutionFinder {
                     boundSolutionHandler(nodeRight)
                     break 
                 }
-            } else if (this.currentPatternIdx === 26) { // place them in the right direction
+            } else if (this.currentPatternIdx >= 26 && this.currentPatternIdx <= 29) { // place them in the right direction
+                const relativeBottom = faceNorth
                 for (let i = 0; i < 4; i++) {
                     const relativeLeft = relativesLeftArr[i]
                     const relativeRight = relativesRightArr[i]
-                    const relativeBottom = faceNorth
                     let state = queue[0].state
                     // console.log(queue[0].state)
                     // console.log(i)
@@ -517,7 +520,7 @@ class SolutionFinder {
                     const nodeMidSwapRight = node(stateMidSwapRight, parentNode, {direction: true, midSwap: true})
                     // console.log(nodeMidSwapRight.state)
                           
-                    parentNode.children.push(stateMidSwapRight)
+                    parentNode.children.push(nodeMidSwapRight)
                     queue.push(nodeMidSwapRight)
 
                     if (boundCheckIfSolvedNew(parentNode.state)) {
@@ -528,10 +531,120 @@ class SolutionFinder {
                         break
                     }
                 }
-            } else if (this.currentPatternIdx === 27) {
-                console.log("empty")
-                break
-            } else if (this.currentPatternIdx === 28) { // yellow corners doer
+            } else if (this.currentPatternIdx === 30) {
+                for (let i = 0; i < 4; i++) {
+                    console.log("here")
+                    const relativeBottom = faceNorth
+                    const relativeLeft = relativesLeftArr[i]
+                    const relativeRight = relativesRightArr[i]
+                    let stateDefault = queue[0].state
+
+                    let stateNormalSwap = magicSevenRight(stateDefault, relativeRight, relativeBottom, relativeLeft)
+                        stateNormalSwap = magicSevenRight(stateNormalSwap, relativeRight, relativeBottom, relativeLeft)
+                        stateNormalSwap = magicSevenLeft(stateNormalSwap, relativeRight, relativeBottom, relativeLeft)
+                        stateNormalSwap = magicSevenLeft(stateNormalSwap, relativeRight, relativeBottom, relativeLeft)
+                        stateNormalSwap = magicSevenRight(stateNormalSwap, relativeRight, relativeBottom, relativeLeft)
+                        stateNormalSwap = magicSevenRight(stateNormalSwap, relativeRight, relativeBottom, relativeLeft)
+
+                    let stateAsymetricSwapRight = magicSevenRight(stateDefault, relativeRight, relativeBottom, relativeLeft)
+                        stateAsymetricSwapRight = magicSevenRight(stateAsymetricSwapRight, relativeRight, relativeBottom, relativeLeft)
+                        stateAsymetricSwapRight = rotor(relativeBottom, stateAsymetricSwapRight, indexes3x3, true)
+                        stateAsymetricSwapRight = rotor(relativeBottom, stateAsymetricSwapRight, indexes3x3, true)
+                        stateAsymetricSwapRight = magicSevenRight(stateAsymetricSwapRight, relativeRight, relativeBottom, relativeLeft)
+                        stateAsymetricSwapRight = magicSevenRight(stateAsymetricSwapRight, relativeRight, relativeBottom, relativeLeft)
+                        stateAsymetricSwapRight = rotor(relativeBottom, stateAsymetricSwapRight, indexes3x3, true)
+                        stateAsymetricSwapRight = rotor(relativeBottom, stateAsymetricSwapRight, indexes3x3, true)
+                        stateAsymetricSwapRight = magicSevenLeft(stateAsymetricSwapRight, relativeRight, relativeBottom, relativeLeft)
+                        stateAsymetricSwapRight = magicSevenLeft(stateAsymetricSwapRight, relativeRight, relativeBottom, relativeLeft)
+                    
+                    let stateAsymetricSwapLeft = magicSevenRight(stateDefault, relativeRight, relativeBottom, relativeLeft)
+                        stateAsymetricSwapLeft = magicSevenLeft(stateAsymetricSwapLeft, relativeRight, relativeBottom, relativeLeft)
+                        stateAsymetricSwapLeft = magicSevenLeft(stateAsymetricSwapLeft, relativeRight, relativeBottom, relativeLeft)
+                        stateAsymetricSwapLeft = rotor(relativeBottom, stateAsymetricSwapLeft, indexes3x3, true)
+                        stateAsymetricSwapLeft = rotor(relativeBottom, stateAsymetricSwapLeft, indexes3x3, true)
+                        stateAsymetricSwapLeft = magicSevenLeft(stateAsymetricSwapLeft, relativeRight, relativeBottom, relativeLeft)
+                        stateAsymetricSwapLeft = magicSevenLeft(stateAsymetricSwapLeft, relativeRight, relativeBottom, relativeLeft)
+                        stateAsymetricSwapLeft = rotor(relativeBottom, stateAsymetricSwapLeft, indexes3x3, true)
+                        stateAsymetricSwapLeft = rotor(relativeBottom, stateAsymetricSwapLeft, indexes3x3, true)
+                        stateAsymetricSwapLeft = magicSevenRight(stateAsymetricSwapLeft, relativeRight, relativeBottom, relativeLeft)
+                        stateAsymetricSwapLeft = magicSevenRight(stateAsymetricSwapLeft, relativeRight, relativeBottom, relativeLeft)
+
+                    const nodeNormalSwap = node(stateNormalSwap, parentNode, {direction: true, normalSwap: true})
+                    const nodeAsymetricSwapR = node(stateAsymetricSwapRight, parentNode, {direction: true, asymetricSwap: true})
+                    const nodeAsymetricSwapL = node(stateAsymetricSwapLeft, parentNode, {direction: true, asymetricSwap: true})
+
+                    // let state1100 = magicSevenRight(stateDefault, relativeRight, relativeBottom, relativeLeft)
+                    //     state1100 = magicSevenRight(state1100, relativeRight, relativeBottom, relativeLeft)
+                    //     state1100 = rotor(relativeBottom, state1100, indexes3x3, true)
+                    //     state1100 = magicSevenLeft(state1100, relativeRight, relativeBottom, relativeLeft)
+                    //     state1100 = magicSevenLeft(state1100, relativeRight, relativeBottom, relativeLeft)
+                    //     state1100 = rotor(relativeBottom, state1100, indexes3x3, true)
+                    //     state1100 = magicSevenRight(state1100, relativeRight, relativeBottom, relativeLeft)
+                    //     state1100 = magicSevenRight(state1100, relativeRight, relativeBottom, relativeLeft)
+                    //     state1100 = rotor(relativeBottom, state1100, indexes3x3, true)
+                    //     state1100 = magicSevenLeft(state1100, relativeRight, relativeBottom, relativeLeft)
+                    //     state1100 = magicSevenLeft(state1100, relativeRight, relativeBottom, relativeLeft)
+                    //     state1100 = rotor(relativeBottom, state1100, indexes3x3, true)
+
+                    // let state1111 = magicSevenRight(stateDefault, relativeRight, relativeBottom, relativeLeft)
+                    //     state1111 = magicSevenRight(state1111, relativeRight, relativeBottom, relativeLeft)
+                    //     state1111 = rotor(relativeBottom, state1111, indexes3x3, true)
+                    //     state1111 = magicSevenLeft(state1111, relativeRight, relativeBottom, relativeLeft)
+                    //     state1111 = magicSevenLeft(state1111, relativeRight, relativeBottom, relativeLeft)
+                    //     state1111 = rotor(relativeBottom, state1111, indexes3x3, true);
+                    //     state1111 = magicSevenRight(state1111, relativeRight, relativeBottom, relativeLeft)
+                    //     state1111 = magicSevenRight(state1111, relativeRight, relativeBottom, relativeLeft)
+                    //     state1111 = rotor(relativeBottom, state1111, indexes3x3, true)
+                    //     state1111 = magicSevenLeft(state1111, relativeRight, relativeBottom, relativeLeft)
+                    //     state1111 = magicSevenLeft(state1111, relativeRight, relativeBottom, relativeLeft)
+                    //     state1111 = rotor(relativeBottom, state1111, indexes3x3, true);
+                    //     state1111 = rotor(relativeBottom, state1111, indexes3x3, true)
+                    //     state1111 = magicSevenRight(state1111, relativeRight, relativeBottom, relativeLeft)
+                    //     state1111 = magicSevenRight(state1111, relativeRight, relativeBottom, relativeLeft)
+                    //     state1111 = rotor(relativeBottom, state1111, indexes3x3, true)
+                    //     state1111 = magicSevenLeft(state1111, relativeRight, relativeBottom, relativeLeft)
+                    //     state1111 = magicSevenLeft(state1111, relativeRight, relativeBottom, relativeLeft)
+                    //     state1111 = rotor(relativeBottom, state1111, indexes3x3, true);
+                    //     state1111 = magicSevenRight(state1111, relativeRight, relativeBottom, relativeLeft)
+                    //     state1111 = magicSevenRight(state1111, relativeRight, relativeBottom, relativeLeft)
+                    //     state1111 = rotor(relativeBottom, state1111, indexes3x3, true)
+                    //     state1111 = magicSevenLeft(state1111, relativeRight, relativeBottom, relativeLeft)
+                    //     state1111 = magicSevenLeft(state1111, relativeRight, relativeBottom, relativeLeft)
+                    //     state1111 = rotor(relativeBottom, state1111, indexes3x3, true);
+
+                    // let state1010 = magicSevenRight(stateDefault, relativeRight, relativeBottom, relativeLeft)
+                    //     state1010 = magicSevenRight(state1010, relativeRight, relativeBottom, relativeLeft)
+                    //     state1010 = rotor(relativeBottom, state1010, indexes3x3, true)
+                    //     state1010 = magicSevenLeft(state1010, relativeRight, relativeBottom, relativeLeft)
+                    //     state1010 = magicSevenLeft(state1010, relativeRight, relativeBottom, relativeLeft)
+                    //     state1010 = magicSevenRight(state1010, relativeRight, relativeBottom, relativeLeft)
+                    //     state1010 = magicSevenRight(state1010, relativeRight, relativeBottom, relativeLeft)
+                    //     state1010 = rotor(relativeBottom, state1010, indexes3x3, true)
+                    //     state1010 = magicSevenLeft(state1010, relativeRight, relativeBottom, relativeLeft)
+                    //     state1010 = magicSevenLeft(state1010, relativeRight, relativeBottom, relativeLeft)
+
+                    // const node1100 = node(state1100, parentNode, {direction: true, trick1100: true})
+                    // const node1111 = node(state1100, parentNode, {direction: true, trick1111: true})
+                    // const node1010 = node(state1100, parentNode, {direction: true, trick1010: true})
+
+                    parentNode.children.push(nodeNormalSwap, nodeAsymetricSwapR, nodeAsymetricSwapL)
+                    queue.push(nodeNormalSwap, nodeAsymetricSwapR, nodeAsymetricSwapL)
+
+                    if (boundCheckIfSolvedNew(parentNode.state)) {
+                        boundSolutionHandler(parentNode)
+                        break
+                    } else if (boundCheckIfSolvedNew(nodeNormalSwap.state)) {
+                        boundSolutionHandler(nodeNormalSwap)
+                        break
+                    } else if (boundCheckIfSolvedNew(nodeAsymetricSwapR.state)) {
+                        boundSolutionHandler(nodeAsymetricSwapR)
+                        break
+                    } else if (boundCheckIfSolvedNew(nodeAsymetricSwapL.state)) {
+                        boundSolutionHandler(nodeAsymetricSwapL)
+                        break
+                    }
+                }
+            } else if (this.currentPatternIdx === 31) { // yellow corners doer
                 console.log("here")
                 for (let i = 0; i < 4; i++) {
                     const relativeLeft = relativesLeftArr[i]

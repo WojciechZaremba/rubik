@@ -39,12 +39,15 @@ class SolutionFinder {
                 23: ".oo.oo.Vowwwwwwwwwrr.rr.rr.....y.......bbbbbbgggVgg...", // mid placer
                 24: ".oo.oo.oowwwwwwwwwrr.rr.rr.....y.......bbbbbbgggggg...", // mid placer
                 25: "5oo.oo8oowwwwwwwwwrr6rr.rr76.5.y.7.85.6bbbbbbgggggg8.7", // corners trick again
-                26: "5oo*oo8oowwwwwwwwwrr6rr*rr76*5*y*7*85*6bbbbbbgggggg8*7", // bottom mids trick
-                27: "5ooooo8oowwwwwwwwwrr6rrrrr76y5yyy7y85b6bbbbbbgggggg8g7", // just before fixing corners
-                28: "ooo.ooooowwwwwwwwwrrrrr.rrry.y.y.y.yb.bbbbbbbggggggg.g", // yellow corners done (end)
+                26: "5oo*oo8oowwwwwwwwwrr6rr.rr76.5.y*7.85.6bbbbbbgggggg8.7", // bottom mids trick
+                27: "5oo*oo8oowwwwwwwwwrr6rr.rr76.5.y*7*85.6bbbbbbgggggg8*7", // bottom mids trick
+                28: "5oo*oo8oowwwwwwwwwrr6rr*rr76.5*y*7*85.6bbbbbbgggggg8*7", // bottom mids trick
+                29: "5oo*oo8oowwwwwwwwwrr6rr*rr76*5*y*7*85*6bbbbbbgggggg8*7", // bottom mids trick
+                30: "5ooooo8oowwwwwwwwwrr6rrrrr76y5yyy7y85b6bbbbbbgggggg8g7", // just before fixing corners
+                31: "ooo.ooooowwwwwwwwwrrrrr.rrry.y.y.y.yb.bbbbbbbggggggg.g", // yellow corners done (end)
                 //99: "o.o.ooo.owwwwwwwwwr.rrr.r.ry.y.y.y.yb.b.b.bbbggg.g.g.g", // yellow corners done
                 // 98: "o?ooooo$owwwwwwwwwr#rrrrr@ryyyyyyyyybbb?b#bbbggg$g@ggg", // mid remover
-                30: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg", // the end
+                32: "ooooooooowwwwwwwwwrrrrrrrrryyyyyyyyybbbbbbbbbggggggggg", // the end
             },
             tests: {
                 midRemover: "o?ooooo$owwwwwwwwwr#rrrrr@ryyyyyyyyybbb?b#bbbggg$g@ggg", // mid remover
@@ -496,8 +499,35 @@ class SolutionFinder {
                     boundSolutionHandler(nodeRight)
                     break 
                 }
-            } else if (this.currentPatternIdx === 26) {
+            } else if (this.currentPatternIdx === 26) { // place them in the right direction
+                for (let i = 0; i < 4; i++) {
+                    const relativeLeft = relativesLeftArr[i]
+                    const relativeRight = relativesRightArr[i]
+                    const relativeBottom = faceNorth
+                    let state = queue[0].state
+                    // console.log(queue[0].state)
+                    // console.log(i)
+                    let stateMidSwapRight = magicSevenRight(state, relativeRight, relativeBottom, relativeLeft)
+                        stateMidSwapRight = magicSevenRight(stateMidSwapRight, relativeRight, relativeBottom, relativeLeft)
+                        stateMidSwapRight = rotor(relativeBottom, stateMidSwapRight, indexes3x3, true)
+                        stateMidSwapRight = magicSevenLeft(stateMidSwapRight, relativeRight, relativeBottom, relativeLeft)
+                        stateMidSwapRight = magicSevenLeft(stateMidSwapRight, relativeRight, relativeBottom, relativeLeft)
+                        stateMidSwapRight = rotor(relativeBottom, stateMidSwapRight, indexes3x3, false)
+                    // right only should be enough
+                    const nodeMidSwapRight = node(stateMidSwapRight, parentNode, {direction: true, midSwap: true})
+                    // console.log(nodeMidSwapRight.state)
+                          
+                    parentNode.children.push(stateMidSwapRight)
+                    queue.push(nodeMidSwapRight)
 
+                    if (boundCheckIfSolvedNew(parentNode.state)) {
+                        boundSolutionHandler(parentNode)
+                        break
+                    } else if (boundCheckIfSolvedNew(nodeMidSwapRight.state)) {
+                        boundSolutionHandler(nodeMidSwapRight)
+                        break
+                    }
+                }
             } else if (this.currentPatternIdx === 27) {
                 console.log("empty")
                 break

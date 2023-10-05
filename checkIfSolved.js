@@ -56,11 +56,11 @@ function checkIfSolvedNew(state) {
             } 
         }
         if (pattern[i] === "*") {
-            if (state[i].match(/[bg]/) && (i !== 37 || i !== 30 || i !== 52 || i !== 32)) {
+            if (state[i].match(/[bg]/) && (i !== 37 && i !== 30 && i !== 52 && i !== 32)) {
                 result = false
                 break
             }
-            if (state[i].match(/[or]/) && (i !== 3 || i !== 23 || i !== 28 || i !== 34)) {
+            if (state[i].match(/[or]/) && (i !== 3 && i !== 23 && i !== 28 && i !== 34)) {
                 result = false
                 break
             }

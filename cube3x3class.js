@@ -5,13 +5,14 @@ class Cube {
         this.state = stateStr
         this.history = []
         this.historyIndex = 0 // player can move back and forth through the history
+        this.scramblingMoves = 0
     }
     turn(command, log = false) {
         this.state = command.execute(this.state)
         this.history.splice(this.historyIndex) // delete history after the index (?)
         this.history.push(command) // add new turn to the history
         this.historyIndex++
-        if (log) this.log()
+        //if (log) this.log()
         // does the same as above: (this.historyIndex++ ?)
         // this.historyIndex = this.history.lenght
         //this.log()
@@ -43,6 +44,7 @@ class Cube {
     scramble() {
         //this.log()
         let turnsLeft = Math.floor(Math.random() * 25 + 9) // arbitrary range of random moves
+        this.scramblingMoves = turnsLeft
         console.log("scrambling with", turnsLeft, "moves")
         while (turnsLeft > 0) {
             let faceIdx = Math.floor(Math.random() * 6) // choose random side to turn
@@ -56,17 +58,5 @@ class Cube {
     }
 }
 
-class Turn { // every turn will be served as an object created by this class
-    constructor(face, turnClockWise = true, turn180 = false) {
-        this.faceToRotate = face
-        this.direction = turnClockWise
-        this.turn180 = turn180
-    }
-    execute(currentState) {
-        return rotor(this.faceToRotate, currentState, indexes3x3, this.direction, this.turn180)
-    }
-    undo(currentState) {
-        return rotor(this.faceToRotate, currentState, indexes3x3, !this.direction, this.turn180)
-    }
-}
+
 

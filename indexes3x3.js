@@ -9,7 +9,7 @@ const faceTop = faceWest.map(a => a + 9 * 4) // blue
 const faceBottom = faceWest.map(a => a + 9 * 5) // green
 
 
-// rings are collected clockwise (?)
+// rings are collected clockwise 
 const ringWest = [  
 ...getRight(faceNorth),
 ...getLeft(faceTop),
@@ -49,6 +49,9 @@ const ringBottom = [
 
 // facesDefault and ringsDefaut order must always be identical
 const facesDefault = [faceWest, faceSouth, faceEast, faceNorth, faceTop, faceBottom]
+const faceClock   = [6,3,0,7,4,1,8,5,2] // ??
+const faceCounter = [2,5,8,1,4,7,0,3,6] // ??
+
 const ringsDefault = [ringWest, ringSouth, ringEast, ringNorth, ringTop, ringBottom]
 const ringsRotatedClockwise = []
 const ringsRotatedCounterClockwise = []
@@ -64,9 +67,6 @@ ringsDefault.forEach(ring => {
         .concat(ring.slice(0, 3))
         )
     })
-    const faceClock = [6,3,0,7,4,1,8,5,2]
-    const faceCounter = [2,5,8,1,4,7,0,3,6]
-    
 
 function getLeft(face) { 
     return [face[0], face[3], face[6]]

@@ -12,7 +12,7 @@ function node(_state, _parentNode, _prevMove) {
     // Object.assign(prev, _prevMove)
     return {
             depth: _parentNode.depth + 1,
-            id: undefined,
+            //id: undefined,
             state: _state,
             prevMove: _prevMove,  
             parent: _parentNode,

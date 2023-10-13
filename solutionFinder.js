@@ -131,8 +131,8 @@ class SolutionFinder {
         let tempArr = []
         for (let i = len - 1; i >= 0; i--) {
             let tempNode = this.solutionLeaves[i]
-            console.log(i)
-            console.log(tempNode)
+            // console.log(i)
+            // console.log(tempNode)
             while (tempNode.depth > 0) {
                 tempArr.unshift(tempNode.prevMove)
                 tempNode = tempNode.parent
@@ -149,16 +149,34 @@ class SolutionFinder {
         const solverLastState = this.stateToSolve
 
         for (let elem of this.solutionPath) {
-            console.log(elem)
-            let turn = new Turn(elem.face, elem.direction, elem.double)
-            console.log(turn)
-            this.cubeToSolve.turn(turn)
+            if (elem.face) {
+                console.log(elem)
+                let turn = new Turn(elem.face, elem.direction, elem.double)
+                console.log(turn)
+                this.cubeToSolve.turn(turn)
+            } else if (elem.cornerSpin) {
+                sequence("cornerSpin", elem.cornerNum, elem.direction, this.cubeToSolve)
+            } else if (elem.magicSeven) {
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve)
+            } else if (elem.magic27) {                
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve)
+            } else if (elem.magic47) {
+                messWithBottomCorners(elem.cornerNum, elem.direction, this.cubeToSolve)
+            } else if (elem.asymetricSwap) {
+                asymmetricBottomSwap(elem.cornerNum, elem.direction, this.cubeToSolve)
+            } else if (elem.midSwap) {
+                midSwap(elem.cornerNum, elem.direction, this.cubeToSolve)
+            } else if (elem.normalSwap) {
+                swapBottomTeeth(elem.cornerNum, elem.direction, this.cubeToSolve)
+            }
+            
         }
 
-        debug(solverLastState)
-        debug(this.cubeToSolve.state)
+        // debug(solverLastState)
+        // debug(this.cubeToSolve.state)
 
-        this.solutionPath.forEach(() => this.cubeToSolve.undo())
+        //this.solutionPath.forEach(() => this.cubeToSolve.undo())
     }
 
     iterTest(x) {
@@ -203,7 +221,7 @@ class SolutionFinder {
 
         const root = {
             depth: 0,
-            id: 0,
+            id: "root",
             state: this.stateToSolve,
             prevMove: {
                 face: null,
@@ -409,8 +427,8 @@ class SolutionFinder {
 
                     const nodeMagicRight = node(magicSevenR, parentNode, {direction: true, magicSeven: true, cornerNum: i})
                     const nodeMagicLeft = node(magicSevenL, parentNode, {direction: false, magicSeven: true, cornerNum: i})
-                    const nodeBottomLeft = node(bottomLeft, parentNode, {direction: false, face: null}) // TO DO: FIX FACE FOR COMMAND PATTERN
-                    const nodeBottomRight = node(bottomRight, parentNode, {direction: true, face: null}) // TO DO: FIX FACE FOR COMMAND PATTERN
+                    const nodeBottomLeft = node(bottomLeft, parentNode, {direction: false, face: faceNorth}) // TO DO: FIX FACE FOR COMMAND PATTERN
+                    const nodeBottomRight = node(bottomRight, parentNode, {direction: true, face: faceNorth}) // TO DO: FIX FACE FOR COMMAND PATTERN
                     
                     parentNode.children.push(nodeMagicLeft, nodeMagicRight, nodeBottomRight, nodeBottomLeft)
                     queue.push(nodeMagicLeft, nodeMagicRight, nodeBottomRight, nodeBottomLeft)
@@ -456,8 +474,8 @@ class SolutionFinder {
 
                     const nodeRight = node(magicSevenR, parentNode, {direction: true, magic27: true, cornerNum: i})
                     const nodeLeft = node(magicSevenL, parentNode, {direction: false, magic27: true, cornerNum: i})
-                    const nodeBottomLeft = node(bottomLeft, parentNode, {direction: false, face: null}) // TO DO: FIX FACE FOR COMMAND PATTERN
-                    const nodeBottomRight = node(bottomRight, parentNode, {direction: true, face: null}) // TO DO: FIX FACE FOR COMMAND PATTERN
+                    const nodeBottomLeft = node(bottomLeft, parentNode, {direction: false, face: faceNorth}) // TO DO: FIX FACE FOR COMMAND PATTERN
+                    const nodeBottomRight = node(bottomRight, parentNode, {direction: true, face: faceNorth}) // TO DO: FIX FACE FOR COMMAND PATTERN
                     
                     parentNode.children.push(nodeLeft, nodeRight, nodeBottomLeft, nodeBottomRight)
                     queue.push(nodeLeft, nodeRight, nodeBottomLeft, nodeBottomRight)
@@ -486,8 +504,8 @@ class SolutionFinder {
                 let stateTurnRight = rotor(relativeBottom, state, indexes3x3, true)
                 let stateTurnLeft = rotor(relativeBottom, state, indexes3x3, false)
                 
-                const nodeRight = node(stateTurnRight, parentNode, {direction: true, face: relativeBottom})
-                const nodeLeft = node(stateTurnLeft, parentNode, {direction: false, face: relativeBottom})
+                const nodeRight = node(stateTurnRight, parentNode, {face: relativeBottom, direction: true})
+                const nodeLeft = node(stateTurnLeft, parentNode, {face: relativeBottom, direction: false})
                 
                 parentNode.children.push(nodeLeft, nodeRight)
                 queue.push(nodeLeft, nodeRight)
@@ -517,7 +535,7 @@ class SolutionFinder {
                         stateMidSwapRight = magicSevenLeft(stateMidSwapRight, relativeRight, relativeBottom, relativeLeft)
                         stateMidSwapRight = rotor(relativeBottom, stateMidSwapRight, indexes3x3, false)
                     // right only should be enough
-                    const nodeMidSwapRight = node(stateMidSwapRight, parentNode, {direction: true, midSwap: true})
+                    const nodeMidSwapRight = node(stateMidSwapRight, parentNode, {direction: true, midSwap: true,  cornerNum: 0})
                     // console.log(nodeMidSwapRight.state)
                           
                     parentNode.children.push(nodeMidSwapRight)
@@ -533,7 +551,6 @@ class SolutionFinder {
                 }
             } else if (this.currentPatternIdx === 30) {
                 for (let i = 0; i < 4; i++) {
-                    console.log("here")
                     const relativeBottom = faceNorth
                     const relativeLeft = relativesLeftArr[i]
                     const relativeRight = relativesRightArr[i]
@@ -570,8 +587,8 @@ class SolutionFinder {
                         stateAsymetricSwapLeft = magicSevenRight(stateAsymetricSwapLeft, relativeRight, relativeBottom, relativeLeft)
 
                     const nodeNormalSwap = node(stateNormalSwap, parentNode, {direction: true, normalSwap: true})
-                    const nodeAsymetricSwapR = node(stateAsymetricSwapRight, parentNode, {direction: true, asymetricSwap: true})
-                    const nodeAsymetricSwapL = node(stateAsymetricSwapLeft, parentNode, {direction: true, asymetricSwap: true})
+                    const nodeAsymetricSwapR = node(stateAsymetricSwapRight, parentNode, {direction: true, asymetricSwap: true, cornerNum: 0})
+                    const nodeAsymetricSwapL = node(stateAsymetricSwapLeft, parentNode, {direction: false, asymetricSwap: true, cornerNum: 0})
 
                     // let state1100 = magicSevenRight(stateDefault, relativeRight, relativeBottom, relativeLeft)
                     //     state1100 = magicSevenRight(state1100, relativeRight, relativeBottom, relativeLeft)
@@ -645,7 +662,6 @@ class SolutionFinder {
                     }
                 }
             } else if (this.currentPatternIdx === 31) { // yellow corners doer
-                console.log("here")
                 for (let i = 0; i < 4; i++) {
                     const relativeLeft = relativesLeftArr[i]
                     const relativeRight = relativesRightArr[i]
@@ -679,7 +695,6 @@ class SolutionFinder {
                     }
                 }
             } 
-
             queue.shift()
         }
 

@@ -72,7 +72,7 @@ window.addEventListener("keydown", (e) => {
     }
 })
 
-function sequence(sequenceType = "", cornerNum = 0, shift = Boolean) {
+function sequence(sequenceType = "", cornerNum = 0, shift = Boolean, cube = cubeScrambled) {
     let sequenceLeft = null
     let sequenceRight = null
     const sequenceBottom = faceNorth // yellow
@@ -99,48 +99,67 @@ function sequence(sequenceType = "", cornerNum = 0, shift = Boolean) {
     }
     switch (sequenceType) {
         case "magicSeven":
-           cubeScrambled.turn(new Turn(shift ? sequenceLeft : sequenceRight, shift), true);
-           cubeScrambled.turn(new Turn(sequenceBottom, !shift), true);
-           cubeScrambled.turn(new Turn(shift ? sequenceLeft : sequenceRight, !shift), true);
-           cubeScrambled.turn(new Turn(sequenceBottom, !shift), true);
-           cubeScrambled.turn(new Turn(shift ? sequenceRight : sequenceLeft, !shift), true);
-           cubeScrambled.turn(new Turn(sequenceBottom, shift), true);
-           cubeScrambled.turn(new Turn(shift ? sequenceRight : sequenceLeft, shift), true);
+            cube.turn(new Turn(shift ? sequenceRight : sequenceLeft, !shift), true);
+            cube.turn(new Turn(sequenceBottom, shift), true);
+            cube.turn(new Turn(shift ? sequenceRight : sequenceLeft, shift), true);
+            cube.turn(new Turn(sequenceBottom, shift), true);
+            cube.turn(new Turn(shift ? sequenceLeft : sequenceRight, shift), true);
+            cube.turn(new Turn(sequenceBottom, !shift), true);
+            cube.turn(new Turn(shift ? sequenceLeft : sequenceRight, !shift), true);
         break
+        // case "magicSeven":
+        //     cube.turn(new Turn(shift ? sequenceLeft : sequenceRight, shift), true);
+        //     cube.turn(new Turn(sequenceBottom, !shift), true);
+        //     cube.turn(new Turn(shift ? sequenceLeft : sequenceRight, !shift), true);
+        //     cube.turn(new Turn(sequenceBottom, !shift), true);
+        //     cube.turn(new Turn(shift ? sequenceRight : sequenceLeft, !shift), true);
+        //     cube.turn(new Turn(sequenceBottom, shift), true);
+        //     cube.turn(new Turn(shift ? sequenceRight : sequenceLeft, shift), true);
+        // break
         case "cornerSpin":
-            cubeScrambled.turn(new Turn(shift ? sequenceRight : sequenceLeft, !shift), true);
-            cubeScrambled.turn(new Turn(sequenceBottom, shift), true);
-            cubeScrambled.turn(new Turn(shift ? sequenceRight : sequenceLeft, shift), true);
-            cubeScrambled.turn(new Turn(sequenceBottom, !shift), true);
-            cubeScrambled.turn(new Turn(shift ? sequenceRight : sequenceLeft, !shift), true);
-            cubeScrambled.turn(new Turn(sequenceBottom, shift), true);
-            cubeScrambled.turn(new Turn(shift ? sequenceRight : sequenceLeft, shift), true);
+            cube.turn(new Turn(shift ? sequenceRight : sequenceLeft, !shift), true);
+            cube.turn(new Turn(sequenceBottom, shift), true);
+            cube.turn(new Turn(shift ? sequenceRight : sequenceLeft, shift), true);
+            cube.turn(new Turn(sequenceBottom, !shift), true);
+            cube.turn(new Turn(shift ? sequenceRight : sequenceLeft, !shift), true);
+            cube.turn(new Turn(sequenceBottom, shift), true);
+            cube.turn(new Turn(shift ? sequenceRight : sequenceLeft, shift), true);
         break
     }
 }
 
 function swapBottomTeeth(cornerNum, reverse = false) {
-    sequence("magicSeven", cornerNum, !reverse)
-    sequence("magicSeven", cornerNum, !reverse)
     sequence("magicSeven", cornerNum, reverse)
     sequence("magicSeven", cornerNum, reverse)
     sequence("magicSeven", cornerNum, !reverse)
     sequence("magicSeven", cornerNum, !reverse)
+    sequence("magicSeven", cornerNum, reverse)
+    sequence("magicSeven", cornerNum, reverse)
 }
 function messWithBottomCorners(cornerNum, reverse = false) {
-    sequence("magicSeven", cornerNum, !reverse)
-    sequence("magicSeven", cornerNum, !reverse)
-    sequence("magicSeven", cornerNum, !reverse)
-    sequence("magicSeven", cornerNum, !reverse)
+    sequence("magicSeven", cornerNum, reverse)
+    sequence("magicSeven", cornerNum, reverse)
+    sequence("magicSeven", cornerNum, reverse)
+    sequence("magicSeven", cornerNum, reverse)
 }
 function asymmetricBottomSwap(cornerNum, reverse = false) {
-    sequence("magicSeven", cornerNum, !reverse)
-    sequence("magicSeven", cornerNum, !reverse)
-    cubeScrambled.turn(new Turn(faceNorth, reverse, true), true)
-    sequence("magicSeven", cornerNum, !reverse)
-    sequence("magicSeven", cornerNum, !reverse)
-    cubeScrambled.turn(new Turn(faceNorth, reverse, true), true)
     sequence("magicSeven", cornerNum, reverse)
     sequence("magicSeven", cornerNum, reverse)
-    swapBottomTeeth(cornerNum + 1 > 3 ? 0 : cornerNum + 1)
+    cubeScrambled.turn(new Turn(faceNorth, reverse), true)
+    cubeScrambled.turn(new Turn(faceNorth, reverse), true)
+    sequence("magicSeven", cornerNum, reverse)
+    sequence("magicSeven", cornerNum, reverse)
+    cubeScrambled.turn(new Turn(faceNorth, reverse), true)
+    cubeScrambled.turn(new Turn(faceNorth, reverse), true)
+    sequence("magicSeven", cornerNum, !reverse)
+    sequence("magicSeven", cornerNum, !reverse)
+    //swapBottomTeeth(cornerNum + 1 > 3 ? 0 : cornerNum + 1)
+}
+function midSwap(cornerNum, reverse = false) {
+    sequence("magicSeven", cornerNum, reverse)
+    sequence("magicSeven", cornerNum, reverse)
+    cubeScrambled.turn(new Turn(faceNorth, reverse), true)
+    sequence("magicSeven", cornerNum, !reverse)
+    sequence("magicSeven", cornerNum, !reverse)
+    cubeScrambled.turn(new Turn(faceNorth, !reverse), true)
 }

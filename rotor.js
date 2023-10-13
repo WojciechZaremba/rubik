@@ -24,6 +24,6 @@ function rotor(faceToTurn, currentState, indexes, direction = true, turn180 = fa
     } else {
         return temp.join("")
    }
-
+ 
 }
 //rotor()

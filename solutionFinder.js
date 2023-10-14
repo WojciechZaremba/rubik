@@ -151,26 +151,51 @@ class SolutionFinder {
         for (let elem of this.solutionPath) {
             if (elem.face) {
                 console.log(elem)
-                let turn = new Turn(elem.face, elem.direction, elem.double)
+                let turn = new Turn(elem.face, elem.direction, elem.double, elem.step)
                 console.log(turn)
                 this.cubeToSolve.turn(turn)
             } else if (elem.cornerSpin) {
-                sequence("cornerSpin", elem.cornerNum, elem.direction, this.cubeToSolve)
+                sequence("cornerSpin", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
             } else if (elem.magicSeven) {
-                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
             } else if (elem.magic27) {                
-                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve)
-                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
             } else if (elem.magic47) {
-                messWithBottomCorners(elem.cornerNum, elem.direction, this.cubeToSolve)
+                // messWithBottomCorners(elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
             } else if (elem.asymetricSwap) {
-                asymmetricBottomSwap(elem.cornerNum, elem.direction, this.cubeToSolve)
+                // asymmetricBottomSwap(elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
+                this.cubeToSolve.turn(new Turn(faceNorth, elem.direction, elem.double, elem.step), true)
+                this.cubeToSolve.turn(new Turn(faceNorth, elem.direction, elem.double, elem.step), true)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
+                this.cubeToSolve.turn(new Turn(faceNorth, elem.direction, elem.double, elem.step), true)
+                this.cubeToSolve.turn(new Turn(faceNorth, elem.direction, elem.double, elem.step), true)
+                sequence("magicSeven", elem.cornerNum, !elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, !elem.direction, this.cubeToSolve, elem.step)
             } else if (elem.midSwap) {
-                midSwap(elem.cornerNum, elem.direction, this.cubeToSolve)
+                // midSwap(elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
+                this.cubeToSolve.turn(new Turn(faceNorth, elem.direction, elem.double, elem.step), true)
+                sequence("magicSeven", elem.cornerNum, !elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, !elem.direction, this.cubeToSolve, elem.step)
+                this.cubeToSolve.turn(new Turn(faceNorth, !elem.direction, elem.double, elem.step), true)
             } else if (elem.normalSwap) {
-                swapBottomTeeth(elem.cornerNum, elem.direction, this.cubeToSolve)
+                // swapBottomTeeth(elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, !elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, !elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
+                sequence("magicSeven", elem.cornerNum, elem.direction, this.cubeToSolve, elem.step)
             }
-            
         }
 
         // debug(solverLastState)
@@ -291,8 +316,8 @@ class SolutionFinder {
                 
                 //let stateTurn180 = rotor(face, state, indexes3x3, boolRight, true)
 
-                const nodeRight = node(stateTurnRight, parentNode, {face: face, direction: true})
-                const nodeLeft = node(stateTurnLeft, parentNode, {face: face, direction: false})
+                const nodeRight = node(stateTurnRight, parentNode, {face: face, direction: true, step: this.currentPatternIdx})
+                const nodeLeft = node(stateTurnLeft, parentNode, {face: face, direction: false, step: this.currentPatternIdx})
 
                 // const node180 = {
                 //     depth: parentNode.depth + 1,
@@ -394,8 +419,8 @@ class SolutionFinder {
                     let stateSpinR = spinRight(relativeRight, relativeBottom, state)
                     let stateSpinL = spinLeft(relativeLeft, relativeBottom, state)
 
-                    const nodeRight = node(stateSpinR, parentNode, {direction: true, cornerSpin: true, cornerNum: i})
-                    const nodeLeft = node(stateSpinL, parentNode, {direction: false, cornerSpin: true, cornerNum: i})
+                    const nodeRight = node(stateSpinR, parentNode, {direction: true, cornerSpin: true, cornerNum: i, step: this.currentPatternIdx})
+                    const nodeLeft = node(stateSpinL, parentNode, {direction: false, cornerSpin: true, cornerNum: i, step: this.currentPatternIdx})
                     
                     parentNode.children.push(nodeRight, nodeLeft)
                     queue.push(nodeRight, nodeLeft)
@@ -424,11 +449,10 @@ class SolutionFinder {
                     let bottomRight = rotor(relativeBottom, state, indexes3x3, true)
                     let bottomLeft = rotor(relativeBottom, state, indexes3x3, false)
 
-
-                    const nodeMagicRight = node(magicSevenR, parentNode, {direction: true, magicSeven: true, cornerNum: i})
-                    const nodeMagicLeft = node(magicSevenL, parentNode, {direction: false, magicSeven: true, cornerNum: i})
-                    const nodeBottomLeft = node(bottomLeft, parentNode, {direction: false, face: faceNorth}) // TO DO: FIX FACE FOR COMMAND PATTERN
-                    const nodeBottomRight = node(bottomRight, parentNode, {direction: true, face: faceNorth}) // TO DO: FIX FACE FOR COMMAND PATTERN
+                    const nodeMagicRight = node(magicSevenR, parentNode, {direction: true, magicSeven: true, cornerNum: i, step: this.currentPatternIdx})
+                    const nodeMagicLeft = node(magicSevenL, parentNode, {direction: false, magicSeven: true, cornerNum: i, step: this.currentPatternIdx})
+                    const nodeBottomLeft = node(bottomLeft, parentNode, {direction: false, face: faceNorth, step: this.currentPatternIdx}) // TO DO: FIX FACE FOR COMMAND PATTERN
+                    const nodeBottomRight = node(bottomRight, parentNode, {direction: true, face: faceNorth, step: this.currentPatternIdx}) // TO DO: FIX FACE FOR COMMAND PATTERN
                     
                     parentNode.children.push(nodeMagicLeft, nodeMagicRight, nodeBottomRight, nodeBottomLeft)
                     queue.push(nodeMagicLeft, nodeMagicRight, nodeBottomRight, nodeBottomLeft)
@@ -472,10 +496,10 @@ class SolutionFinder {
                     let bottomRight = rotor(relativeBottom, state, indexes3x3, true)
                     let bottomLeft = rotor(relativeBottom, state, indexes3x3, false)
 
-                    const nodeRight = node(magicSevenR, parentNode, {direction: true, magic27: true, cornerNum: i})
-                    const nodeLeft = node(magicSevenL, parentNode, {direction: false, magic27: true, cornerNum: i})
-                    const nodeBottomLeft = node(bottomLeft, parentNode, {direction: false, face: faceNorth}) // TO DO: FIX FACE FOR COMMAND PATTERN
-                    const nodeBottomRight = node(bottomRight, parentNode, {direction: true, face: faceNorth}) // TO DO: FIX FACE FOR COMMAND PATTERN
+                    const nodeRight = node(magicSevenR, parentNode, {direction: true, magic27: true, cornerNum: i, step: this.currentPatternIdx})
+                    const nodeLeft = node(magicSevenL, parentNode, {direction: false, magic27: true, cornerNum: i, step: this.currentPatternIdx})
+                    const nodeBottomLeft = node(bottomLeft, parentNode, {direction: false, face: faceNorth, step: this.currentPatternIdx}) // TO DO: FIX FACE FOR COMMAND PATTERN
+                    const nodeBottomRight = node(bottomRight, parentNode, {direction: true, face: faceNorth, step: this.currentPatternIdx}) // TO DO: FIX FACE FOR COMMAND PATTERN
                     
                     parentNode.children.push(nodeLeft, nodeRight, nodeBottomLeft, nodeBottomRight)
                     queue.push(nodeLeft, nodeRight, nodeBottomLeft, nodeBottomRight)
@@ -504,8 +528,8 @@ class SolutionFinder {
                 let stateTurnRight = rotor(relativeBottom, state, indexes3x3, true)
                 let stateTurnLeft = rotor(relativeBottom, state, indexes3x3, false)
                 
-                const nodeRight = node(stateTurnRight, parentNode, {face: relativeBottom, direction: true})
-                const nodeLeft = node(stateTurnLeft, parentNode, {face: relativeBottom, direction: false})
+                const nodeRight = node(stateTurnRight, parentNode, {face: relativeBottom, direction: true, step: this.currentPatternIdx})
+                const nodeLeft = node(stateTurnLeft, parentNode, {face: relativeBottom, direction: false, step: this.currentPatternIdx})
                 
                 parentNode.children.push(nodeLeft, nodeRight)
                 queue.push(nodeLeft, nodeRight)
@@ -535,7 +559,7 @@ class SolutionFinder {
                         stateMidSwapRight = magicSevenLeft(stateMidSwapRight, relativeRight, relativeBottom, relativeLeft)
                         stateMidSwapRight = rotor(relativeBottom, stateMidSwapRight, indexes3x3, false)
                     // right only should be enough
-                    const nodeMidSwapRight = node(stateMidSwapRight, parentNode, {direction: true, midSwap: true,  cornerNum: 0})
+                    const nodeMidSwapRight = node(stateMidSwapRight, parentNode, {direction: true, midSwap: true,  cornerNum: i, step: this.currentPatternIdx})
                     // console.log(nodeMidSwapRight.state)
                           
                     parentNode.children.push(nodeMidSwapRight)
@@ -574,8 +598,7 @@ class SolutionFinder {
                         stateAsymetricSwapRight = magicSevenLeft(stateAsymetricSwapRight, relativeRight, relativeBottom, relativeLeft)
                         stateAsymetricSwapRight = magicSevenLeft(stateAsymetricSwapRight, relativeRight, relativeBottom, relativeLeft)
                     
-                    let stateAsymetricSwapLeft = magicSevenRight(stateDefault, relativeRight, relativeBottom, relativeLeft)
-                        stateAsymetricSwapLeft = magicSevenLeft(stateAsymetricSwapLeft, relativeRight, relativeBottom, relativeLeft)
+                    let stateAsymetricSwapLeft = magicSevenLeft(stateDefault, relativeRight, relativeBottom, relativeLeft)
                         stateAsymetricSwapLeft = magicSevenLeft(stateAsymetricSwapLeft, relativeRight, relativeBottom, relativeLeft)
                         stateAsymetricSwapLeft = rotor(relativeBottom, stateAsymetricSwapLeft, indexes3x3, true)
                         stateAsymetricSwapLeft = rotor(relativeBottom, stateAsymetricSwapLeft, indexes3x3, true)
@@ -586,9 +609,9 @@ class SolutionFinder {
                         stateAsymetricSwapLeft = magicSevenRight(stateAsymetricSwapLeft, relativeRight, relativeBottom, relativeLeft)
                         stateAsymetricSwapLeft = magicSevenRight(stateAsymetricSwapLeft, relativeRight, relativeBottom, relativeLeft)
 
-                    const nodeNormalSwap = node(stateNormalSwap, parentNode, {direction: true, normalSwap: true})
-                    const nodeAsymetricSwapR = node(stateAsymetricSwapRight, parentNode, {direction: true, asymetricSwap: true, cornerNum: 0})
-                    const nodeAsymetricSwapL = node(stateAsymetricSwapLeft, parentNode, {direction: false, asymetricSwap: true, cornerNum: 0})
+                    const nodeNormalSwap = node(stateNormalSwap, parentNode, {direction: true, normalSwap: true, cornerNum: i, step: this.currentPatternIdx})
+                    const nodeAsymetricSwapR = node(stateAsymetricSwapRight, parentNode, {direction: true, asymetricSwap: true, cornerNum: i, step: this.currentPatternIdx})
+                    const nodeAsymetricSwapL = node(stateAsymetricSwapLeft, parentNode, {direction: false, asymetricSwap: true, cornerNum: i, step: this.currentPatternIdx})
 
                     // let state1100 = magicSevenRight(stateDefault, relativeRight, relativeBottom, relativeLeft)
                     //     state1100 = magicSevenRight(state1100, relativeRight, relativeBottom, relativeLeft)
@@ -677,8 +700,8 @@ class SolutionFinder {
                         magicSevenL = magicSevenLeft(magicSevenL, relativeRight, relativeBottom, relativeLeft)
                         magicSevenL = magicSevenLeft(magicSevenL, relativeRight, relativeBottom, relativeLeft)
 
-                    const nodeRight = node(magicSevenR, parentNode, {direction: true, magic47: true, cornerNum: i})
-                    const nodeLeft = node(magicSevenL, parentNode, {direction: false, magic47: true, cornerNum: i})
+                    const nodeRight = node(magicSevenR, parentNode, {direction: true, magic47: true, cornerNum: i, step: this.currentPatternIdx})
+                    const nodeLeft = node(magicSevenL, parentNode, {direction: false, magic47: true, cornerNum: i, step: this.currentPatternIdx})
 
                     parentNode.children.push(nodeLeft, nodeRight)
                     queue.push(nodeLeft, nodeRight)
